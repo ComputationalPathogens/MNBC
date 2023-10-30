@@ -124,12 +124,13 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 	}
 	
 	private static void printHelpInfo() {
-		System.out.println("This NBCBuild program builds a reference genome database from a set of genome sequence files by k-mer counting.");
+		System.out.println("This NBCBuild program builds a reference database from a set of assembly sequence files.");
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-k:	K-mer length");
-		System.out.println("-c:	Number of threads");
+		System.out.println("-c:	Number of threads");		
 		System.out.println("-i:	Input directory containing the (filtered) sequence files of reference genomes downloaded from NCBI RefSeq");
 		System.out.println("-o:	Output database directory");
+		System.out.println("-f (optional): The minimum threshold on the length of the assembly sequence (an integer not smaller than 0, the default value is 0). Sequences with lengths below this threshold will be removed, and all plasmids will be removed.");
 		System.out.println("-b (optional): Log file of the previous abnormally killed run (.out file in Slurm)");
 	}
 	
