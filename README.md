@@ -22,17 +22,17 @@ nodes.dmp: Taxonomy file in the taxdmp folder (taxdmp.zip downloaded from https:
 metainfo.txt: Output file
 
 2. Run NBCBuild with the following command to build the reference database:  
-<b>java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.jar -Xmx1G NBCBuild -k 15 -c 2 -f 300000 -i RefSeq_genomes/ -o db/</b>  
+<b>java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.jar -Xmx1G MNBCBuild -k 15 -c 2 -f 300000 -i RefSeq_genomes/ -o db/</b>  
 (The following help menu will be displayed by using '-h')  
 -k:	K-mer length  
 -c:	Number of threads  
 -i:	Input directory containing the reference sequence files downloaded from  RefSeq (*.fna.gz or *.fna)
 -o: Existing output directory which is the reference database
--f (optional): The minimum threshold on the sequence length (an integer not smaller than 0, the default value is 0). Sequences with lengths below this threshold will be removed, and all plasmids will be removed.
+-f (optional): The minimum threshold on the sequence length (an integer not smaller than 0, the default value is 0). Sequences with lengths below this threshold will be ignored, and all plasmids will be ignored.
 -b (optional): Log file of the previous abnormally killed run (.out file in Slurm)
 
 3. Run NBCClassify with the following command to classify the reads against the database:  
-<b>java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.jar -Xmx2G NBCClassify -k 15 -c 2 -d db/ -m metainfo.txt -o result.txt -t 1 reads.fasta</b>  
+<b>java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.jar -Xmx1G MNBCClassify -k 15 -c 2 -d db/ -m metainfo.txt -o result.txt -t 1 reads.fasta</b>  
 (The following help menu will be displayed by using '-h')  
 -k: K-mer length  
 -c: Number of threads  
