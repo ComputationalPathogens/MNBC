@@ -130,7 +130,7 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 		System.out.println("-c:	Number of threads");		
 		System.out.println("-i:	Input directory containing the (filtered) sequence files of reference genomes downloaded from NCBI RefSeq");
 		System.out.println("-o:	Output database directory");
-		System.out.println("-f (optional): The minimum threshold on the sequence length (an integer not smaller than 0, the default value is 0). Sequences with lengths below this threshold will be removed, and all plasmids will be removed.");
+		System.out.println("-f (optional): The minimum threshold on the sequence length (an integer not smaller than 0, the default value is 0). Sequences with lengths below this threshold will be ignored, and all plasmids will be ignored.");
 		System.out.println("-b (optional): Log file of the previous abnormally killed run (.out file in Slurm)");
 	}
 	

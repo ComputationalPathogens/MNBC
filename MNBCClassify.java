@@ -819,7 +819,7 @@ public class MNBCClassify {
 		System.out.println("-d:	Input database directory");
 		System.out.println("-m:	Input metainfo file");
 		System.out.println("-o:	Final classification file");
-		System.out.println("-t:	Type of reads (Paired-end: 2, Single-end: 1). Paired-end reads have two .fasta/.fastq files (can be gzipped) following; single-end reads have one.");
+		System.out.println("-t:	Type of reads (Paired-end: 2, Single-end: 1). Paired-end reads have two .fasta/.fastq files (can be gzipped) following; single-end reads have one file (can be gzipped).");
 		System.out.println("-p (optional): Penalty for non-existent k-mers (default -2000)");
 	}
 }
