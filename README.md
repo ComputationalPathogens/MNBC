@@ -13,7 +13,7 @@ The 'example' folder includes a demo, which is described below to demonstrate th
 <b>Problem description:</b>  
 The 'reads.fasta' file contains ten short read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database contains two complete genomes obtained from NCBI RefSeq; GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain. From the result file 'classify_result.txt', it can be seen that all the ten reads were correctly classified.
 
-<b>Binner usage:</b>  
+<b>Tool usage:</b>  
 1. Run GenomeTaxidFinder with the following command to find the taxonomic IDs of the reference genomes:  
 <b>java -cp MNBC.jar -Xmx1G GenomeTaxidFinder RefSeq_genomes/ assembly_summary_refseq.txt taxdmp/nodes.dmp metainfo.txt</b>  
 RefSeq_genomes: Input directory containing reference sequence files downloaded from RefSeq (*.fna.gz)  
