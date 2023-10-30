@@ -26,9 +26,9 @@ metainfo.txt: Output file
 (The following help menu will be displayed by using '-h')  
 -k:	K-mer length  
 -c:	Number of threads  
--i:	Input directory containing the reference sequence files downloaded from  RefSeq (*.fna.gz or *.fna)
--o: Existing output directory which is the reference database
--f (optional): The minimum threshold on the sequence length (an integer not smaller than 0, the default value is 0). Sequences with lengths below this threshold will be ignored, and all plasmids will be ignored.
+-i:	Input directory containing the reference sequence files downloaded from  RefSeq (*.fna.gz or *.fna)  
+-o: Existing output directory which is the reference database  
+-f (optional): The minimum threshold on the sequence length (an integer not smaller than 0, the default value is 0). Sequences with lengths below this threshold will be ignored, and all plasmids will be ignored.  
 -b (optional): Log file of the previous abnormally killed run (.out file in Slurm)
 
 3. Run NBCClassify with the following command to classify the reads against the database:  
