@@ -124,7 +124,7 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 	}
 	
 	private static void printHelpInfo() {
-		System.out.println("This NBCBuild program builds a reference database from a set of assembly sequence files.");
+		System.out.println("This NBCBuild program (v1.0) builds a reference database from a set of sequence files.");
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-k:	K-mer length");
 		System.out.println("-c:	Number of threads");		

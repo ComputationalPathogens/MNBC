@@ -812,7 +812,7 @@ public class MNBCClassify {
 	}
 	
 	private static void printHelpInfo() {
-		System.out.println("This NBCClassify program classify a set of reads against a reference database.");
+		System.out.println("This NBCClassify program (v1.0) classify reads against a reference database.");
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-k:	K-mer length");
 		System.out.println("-c:	Number of threads");
