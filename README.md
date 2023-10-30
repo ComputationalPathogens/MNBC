@@ -39,5 +39,5 @@ metainfo.txt: Output file
 -d: Input database directory  
 -m:	Input metainfo file  
 -o:	Final classification file  
--t:	Type of reads (Paired-end: 2, Single-end: 1). Paired-end reads have two .fasta/.fastq files (can be gzipped) following; single-end reads have one.  
+-t:	Type of reads (Paired-end: 2, Single-end: 1). Paired-end reads have two .fasta/.fastq files (can be gzipped) following; single-end reads have one (can be gzipped).  
 -p (optional): Penalty for non-existent k-mers (default -2000)
