@@ -15,8 +15,7 @@ The 'reads.fasta' file contains ten short read sequences to be classified. Five 
 
 <b>Binner usage:</b>  
 1. Run GenomeTaxidFinder with the following command to find the taxonomic IDs of the reference genomes:  
-<b>java -cp MA-NBC.jar -Xmx2G GenomeTaxidFinder RefSeq_genomes/ assembly_summary_refseq.txt taxdmp/nodes.dmp metainfo.txt<b>
-
+<b>java -cp MA-NBC.jar -Xmx2G GenomeTaxidFinder RefSeq_genomes/ assembly_summary_refseq.txt taxdmp/nodes.dmp metainfo.txt</b>  
 RefSeq_genomes: Input directory corresponding to the reference database, containing sequence files downloaded from RefSeq (*.fna.gz)  
 assembly_summary_refseq.txt: Downloaded from  RefSeq https://ftp.ncbi.nlm.nih.gov/genomes/.vol2/refseq/  
 nodes.dmp: Taxonomy file in the taxdmp folder (taxdmp.zip downloaded from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)  
