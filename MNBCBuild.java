@@ -27,9 +27,10 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 						//Only use minimizer seeds (w=k, window size=w+k-1), base/kmer ordering can change (here use default alphabetical ACGT order)
 	private static int k;
 	private static int numberOfThreads;
+	private static int lengthThreshold = 0;
 	private static String referenceGenomeDirPath;	
 	private static String outputDirPath;
-	private static String previousProgressPath;
+	private static String previousProgressPath;	
 	
 	public static void main(String[] args) {
 		for(int i = 0; i < args.length; i++) {
@@ -40,6 +41,9 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 						break;
 					case 'c':
 						numberOfThreads = Integer.parseInt(args[i + 1]);
+						break;
+					case 'f':
+						lengthThreshold = Integer.parseInt(args[i + 1]);
 						break;
 					case 'i':
 						referenceGenomeDirPath = args[i + 1];
@@ -340,6 +344,8 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 		private ArrayList<String> readGenomeFile(File genomeFile) throws FileNotFoundException, IOException {
 			ArrayList<String> chromosomes = new ArrayList<String>();		
 			String chromosome = "";
+			int chromosomeLength = 0;
+			boolean retain = true;
 			
 			BufferedReader reader = null;
 			if(genomeFile.getName().endsWith(".gz")) {
@@ -351,17 +357,36 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 			String line = null;
 			while((line = reader.readLine()) != null) {
 				if(line.startsWith(">")) {
-					if(!chromosome.isEmpty()) {						
-						chromosomes.add(chromosome.toUpperCase());						
-						chromosome = "";
+					line = line.toLowerCase();
+					
+					if(chromosomeLength != 0) {						
+						if(chromosomeLength >= lengthThreshold) {
+							chromosomes.add(chromosome.toUpperCase());							
+						}
+						chromosomeLength = 0;
+						chromosome = "";						
 					}
-				} else {					
-					chromosome = chromosome.concat(line);
+					
+					if(line.contains("plasmid")) {
+						retain = false;
+						continue;
+					} else {
+						retain = true;
+						continue;
+					}
+				} else {
+					if(retain) {
+						chromosomeLength += line.length();
+						chromosome = chromosome.concat(line);
+						continue;
+					}
 				}
 			}			
-			if(!chromosome.isEmpty()) {
-				chromosomes.add(chromosome.toUpperCase());
-			}				
+			if(chromosomeLength != 0) {
+				if(chromosomeLength >= lengthThreshold) {
+					chromosomes.add(chromosome.toUpperCase());
+				}
+			}			
 			reader.close();			
 			
 			return chromosomes;
