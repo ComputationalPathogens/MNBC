@@ -22,7 +22,7 @@ nodes.dmp: Taxonomy file in the taxdmp folder (taxdmp.zip downloaded from https:
 metainfo.txt: Output file
 
 2. Run NBCBuild with the following command to build the reference database:  
-java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.jar -Xmx1G NBCBuild -k 15 -c 2 -f 300000 -i RefSeq_genomes/ -o db/  
+<b>java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.jar -Xmx1G NBCBuild -k 15 -c 2 -f 300000 -i RefSeq_genomes/ -o db/</b>  
 (The following help menu will be displayed by using '-h')  
 -k:	K-mer length  
 -c:	Number of threads  
@@ -32,7 +32,7 @@ java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.
 -b (optional): Log file of the previous abnormally killed run (.out file in Slurm)
 
 3. Run NBCClassify with the following command to classify the reads against the database:  
-java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.jar -Xmx2G NBCClassify -k 15 -c 2 -d db/ -m metainfo.txt -o result.txt -t 1 reads.fasta  
+<b>java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.jar -Xmx2G NBCClassify -k 15 -c 2 -d db/ -m metainfo.txt -o result.txt -t 1 reads.fasta</b>  
 (The following help menu will be displayed by using '-h')  
 -k: K-mer length  
 -c: Number of threads  
