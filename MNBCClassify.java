@@ -94,7 +94,7 @@ public class MNBCClassify {
 		logFres = new float[countFiles.length];
 		genomeMinimizers = new MutableIntSet[countFiles.length];
 		
-		ExecutorService nested = Executors.newFixedThreadPool(numberOfCores);
+		ExecutorService nested = Executors.newFixedThreadPool(numberOfCores - 1);
 		CompletionService<String> pool = new ExecutorCompletionService<String>(nested);
 		System.out.println("Created a thread pool");
 		for(int i = 0; i < countFiles.length; i++) {
@@ -127,11 +127,10 @@ public class MNBCClassify {
 		new Thread(new Producer()).start();
 		System.out.println("Started producer thread");
 		
-		int numberOfConsumers = numberOfThreads;
-		for(int i = 0; i < numberOfConsumers; i++) {
+		for(int i = 0; i < numberOfThreads; i++) {
 			new Thread(new Consumer(i)).start();
 		}
-		System.out.println("Started " + numberOfConsumers + " consumer threads");
+		System.out.println("Started " + numberOfThreads + " consumer threads");
 		
 		int completedConsumerCounter = 0;
 		try {
@@ -145,7 +144,7 @@ public class MNBCClassify {
 				System.out.println("Created writer to existing result file " + outputFilePath);
 			}			
 			
-			while(completedConsumerCounter < numberOfConsumers) {
+			while(completedConsumerCounter < numberOfThreads) {
 				String outcome = resultQueue.take();
 				if(outcome.endsWith("- finished")) {
 					completedConsumerCounter++;
