@@ -171,7 +171,7 @@ public class MNBCClassify {
 			String line = reader.readLine();
 			while((line = reader.readLine()) != null) {
 				String[] fields = line.split("\t");
-				if(fields.length == 10) {
+				if(fields.length == 12) {
 					finishedReadIds.add(fields[0]);
 				}
 			}
