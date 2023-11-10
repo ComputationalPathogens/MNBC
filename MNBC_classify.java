@@ -106,14 +106,13 @@ public class MNBC_classify {
 		
 		for(int i = 0; i < countFiles.length; i++) {
 			try {
-				System.out.println("Waiting to get outcome of " + i + "th returned task...");
 				String outcome = pool.take().get();
 
 				if(outcome.contains("ERROR")) {
-					System.out.println("This task failed (" + outcome + "), exiting");
+					System.out.println(i + "th task failed (" + outcome + "), exiting");
 					System.exit(1);
 				} else {
-					System.out.println("This task succeeded (" + outcome + ")");
+					System.out.println(i + "th task succeeded (" + outcome + ")");
 				}
 			} catch(Exception e) {
 				System.out.println("Exception on " + i + " th returned task, exiting");
