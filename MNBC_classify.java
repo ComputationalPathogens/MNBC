@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+//import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -111,9 +112,9 @@ public class MNBC_classify {
 				if(outcome.contains("ERROR")) {
 					System.out.println(i + "th task failed (" + outcome + "), exiting");
 					System.exit(1);
-				} else {
+				} /*else {
 					System.out.println(i + "th task succeeded (" + outcome + ")");
-				}
+				}*/
 			} catch(Exception e) {
 				System.out.println("Exception on " + i + " th returned task, exiting");
 				e.printStackTrace();
@@ -415,7 +416,7 @@ public class MNBC_classify {
 				String[] canonicalKmers = new String[startIndexOfLastKmer + 1]; //first get the canonical kmer at each position
 				for(int i = 0; i <= startIndexOfLastKmer; i++) {
 					String plusKmer = testFrag.substring(i, i + k);
-					String minusKmer = minusSequence.substring(length - i - k, length - i);
+					String minusKmer = minusSequence.substring(startIndexOfLastKmer - i, length - i);
 					canonicalKmers[i] = (plusKmer.compareTo(minusKmer) < 0) ? plusKmer : minusKmer;
 				}
 				
@@ -429,7 +430,7 @@ public class MNBC_classify {
 				//interior minimizers - later windows incrementally
 				int indexOfLastWindowStartPosition = startIndexOfLastKmer - k + 1;					
 				for(int i = 1; i <= indexOfLastWindowStartPosition; i++) {
-					if(minimizer == canonicalKmers[i - 1]) {
+					if(minimizer.equals(canonicalKmers[i - 1])) {
 						minimizer = canonicalKmers[i];
 						int indexOfFirstKmerAfterWindow = i + k;
 						for(int j = i + 1; j < indexOfFirstKmerAfterWindow; j++) {
@@ -464,7 +465,7 @@ public class MNBC_classify {
 				for(int i = 0; i <= startIndexOfLastKmer; i++) {
 					if(!indicesOfInvalidKmers.contains(i)) {
 						String plusKmer = testFrag.substring(i, i + k);
-						String minusKmer = minusSequence.substring(length - i - k, length - i);
+						String minusKmer = minusSequence.substring(startIndexOfLastKmer - i, length - i);
 						canonicalKmers[i] = (plusKmer.compareTo(minusKmer) < 0) ? plusKmer : minusKmer;
 					}
 				}
@@ -483,7 +484,7 @@ public class MNBC_classify {
 				//interior minimizers - later windows incrementally
 				int indexOfLastWindowStartPosition = startIndexOfLastKmer - k + 1;					
 				for(int i = 1; i <= indexOfLastWindowStartPosition; i++) {
-					if(minimizer == canonicalKmers[i - 1]) {
+					if(minimizer.equals(canonicalKmers[i - 1])) {
 						minimizer = "Z";
 						int indexOfFirstKmerAfterWindow = i + k;
 						for(int j = i; j < indexOfFirstKmerAfterWindow; j++) {
@@ -809,16 +810,24 @@ public class MNBC_classify {
 			String[] fields = filename.split("_");
 			genomeIds[id] = fields[0] + "_" + fields[1];
 			
+			genomeMinimizers[id] = new IntHashSet();
 			try {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(countFile)), "UTF-8"));
 				String line = reader.readLine();
-				logFres[id] = (float) Math.log(1.0 / Integer.parseInt(line));
+				logFres[id] = (float) Math.log(1.0 / Integer.parseInt(line));				
 				
-				genomeMinimizers[id] = new IntHashSet();
 				while((line = reader.readLine()) != null) {
 					genomeMinimizers[id].add(Integer.parseInt(line));
 				}
 				reader.close();
+				
+				/*String content = Files.readString(countFile.toPath());
+				String[] lines = content.split("\\s+");
+				logFres[id] = (float) Math.log(1.0 / Integer.parseInt(lines[0]));
+				genomeMinimizers[id] = new IntHashSet();
+				for(int i = 1; i < lines.length; i++) {
+					genomeMinimizers[id].add(Integer.parseInt(lines[i]));
+				}*/
 			} catch(Exception e) {
 				e.printStackTrace();
 				return "ERROR: couldn't read " + filename;
