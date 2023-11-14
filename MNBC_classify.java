@@ -37,8 +37,8 @@ public class MNBC_classify {
 	private static MutableIntSet[] genomeMinimizers;
 	private static HashMap<String, String[]> completeGenomeId2TaxIds;	
 	private static HashSet<String> finishedReadIds;
-	private static BlockingQueue<String[]> readQueue = new ArrayBlockingQueue<String[]>(150); //Balance producer and consumers
-	private static BlockingQueue<String> resultQueue = new ArrayBlockingQueue<String>(150); //Balance consumers and writer
+	private static BlockingQueue<String[]> readQueue; //Balance producer and consumers
+	private static BlockingQueue<String> resultQueue; //Balance consumers and writer
 	
 	public static void main(String[] args) {
 		for(int i = 0; i < args.length; i++) {
@@ -83,6 +83,8 @@ public class MNBC_classify {
 			System.out.println("WARNING - Number of available cores " + numberOfCores + " is less than requested number of threads " + numberOfThreads + ", exiting");
 			System.exit(1);
 		}
+		readQueue = new ArrayBlockingQueue<String[]>(numberOfThreads + 10);
+		resultQueue = new ArrayBlockingQueue<String>(numberOfThreads + 10);
 		
 		File outputFile = new File(outputFilePath);
 		if(outputFile.exists()) {			
@@ -409,9 +411,10 @@ public class MNBC_classify {
 			}			
 			
 			HashSet<String> minimizers = new HashSet<String>();
+			int startIndexOfLastKmer = length - k;
+			String[] canonicalKmers = new String[startIndexOfLastKmer + 1]; //first get the canonical kmer at each position
+			
 			if(indicesOfInvalidKmers.isEmpty()) { //all kmers are valid
-				int startIndexOfLastKmer = length - k;
-				String[] canonicalKmers = new String[startIndexOfLastKmer + 1]; //first get the canonical kmer at each position
 				for(int i = 0; i <= startIndexOfLastKmer; i++) {
 					String plusKmer = testFrag.substring(i, i + k);
 					String minusKmer = minusSequence.substring(startIndexOfLastKmer - i, length - i);
@@ -458,8 +461,6 @@ public class MNBC_classify {
 					minimizers.add(minimizer);					
 				}
 			} else { //there are invalid kmers
-				int startIndexOfLastKmer = length - k;
-				String[] canonicalKmers = new String[startIndexOfLastKmer + 1]; //first get the canonical kmer at each position
 				for(int i = 0; i <= startIndexOfLastKmer; i++) {
 					if(!indicesOfInvalidKmers.contains(i)) {
 						String plusKmer = testFrag.substring(i, i + k);

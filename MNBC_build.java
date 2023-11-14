@@ -23,7 +23,7 @@ import java.util.zip.GZIPOutputStream;
 import org.eclipse.collections.api.set.primitive.MutableIntSet;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
-public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canonical kmers; And only use slurm-jobid.out as the progress file
+public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use canonical kmers; And only use slurm-jobid.out as the progress file
 						//Only use minimizer seeds (w=k, window size=w+k-1), base/kmer ordering can change (here use default alphabetical ACGT order)
 	private static int k;
 	private static int numberOfThreads;
@@ -62,6 +62,13 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 		}
 		
 		long startTime = System.nanoTime();
+		int numberOfCores = Runtime.getRuntime().availableProcessors();
+		System.out.println("Number of available cores: " + numberOfCores);
+		if(numberOfThreads > numberOfCores) {
+			System.out.println("WARNING - Number of available cores " + numberOfCores + " is less than requested number of threads " + numberOfThreads + ", exiting");
+			System.exit(1);
+		}
+		
 		HashSet<String> previouslyCompletedGenomes = null;
 		if(previousProgressPath != null) {
 			System.out.println("***************************************************************");
@@ -70,17 +77,9 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 			System.out.println("***************************************************************");
 		}
 		
-		int numberOfCores = Runtime.getRuntime().availableProcessors();
-		System.out.println("Number of available cores: " + numberOfCores);
-		if(numberOfThreads > numberOfCores) {
-			System.out.println("WARNING - Number of available cores " + numberOfCores + " is less than requested number of threads " + numberOfThreads);
-			numberOfThreads = numberOfCores - 1;
-			System.out.println("Will use " + numberOfThreads + " threads instead");
-		}
-		
 		ExecutorService nested = Executors.newFixedThreadPool(numberOfThreads);
 		CompletionService<String> pool = new ExecutorCompletionService<String>(nested);
-		System.out.println("Created a thread pool of size " + numberOfThreads);
+		System.out.println("Created a thread pool");
 		
 		int taskCounter = 0;
 		File[] trainingGenomes = new File(referenceGenomeDirPath).listFiles();
@@ -97,17 +96,17 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 				}				
 			}			
 		}		
-		System.out.println("Submitted all " + taskCounter + " tasks to thread pool");
+		System.out.println("Submitted all " + taskCounter + " tasks");
 		
 		for(int i = 0; i < taskCounter; i++) {
 			try {
-				System.out.println("Trying to get outcome of " + i + "th returned task...");
+				System.out.println("Waiting to get outcome of " + i + "th returned task...");
 				String outcome = pool.take().get();
 				
 				if(outcome.contains("Finished")) {
 					System.out.println("Congratulations! This task is successful: " + outcome);
 				} else {
-					System.out.println("Unfortunately this task isn't successful: " + outcome);
+					System.out.println("Unfortunately this task failed: " + outcome);
 				}
 			} catch(ExecutionException e) {
 				System.out.println("ExecutionException - thrown on " + i + " th returned task");
@@ -182,73 +181,141 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 					System.out.println("Task " + id + " - start processing " + m + "th chromosome...");
 					String chromosome = chromosomes.get(m);
 					
-					MutableIntSet indicesOfInvalidKmers = checkIfFragOnlyContainsValidCharacters(chromosome);
-					int indexOfLastKmerStartPosition = chromosome.length() - k;
-					kmerTotalCount += indexOfLastKmerStartPosition + 1 - indicesOfInvalidKmers.size();
+					MutableIntSet indicesOfInvalidKmers = new IntHashSet();
+					String minusSequence = "";
+					int length = chromosome.length();
+					for(int i = length - 1; i >= 0; i--) {
+						switch(chromosome.charAt(i)) {
+							case 'A':
+								minusSequence += "T";
+								break;
+							case 'C':
+								minusSequence += "G";
+								break;
+							case 'G':
+								minusSequence += "C";
+								break;
+							case 'T':
+								minusSequence += "A";
+								break;
+							default:
+								for(int j = i - k + 1; j <= i; j++) {
+									indicesOfInvalidKmers.add(j);
+								}
+						}
+					}					
 					
-					String[] canonicalKmers = new String[indexOfLastKmerStartPosition + 1]; //first get the canonical kmer at each position
-					if(indicesOfInvalidKmers.isEmpty()) {
-						for(int i = 0; i <= indexOfLastKmerStartPosition; i++) {
+					int startIndexOfLastKmer = length - k;
+					String[] canonicalKmers = new String[startIndexOfLastKmer + 1]; //first get the canonical kmer at each position
+					kmerTotalCount += startIndexOfLastKmer + 1 - indicesOfInvalidKmers.size();
+					
+					if(indicesOfInvalidKmers.isEmpty()) {						
+						for(int i = 0; i <= startIndexOfLastKmer; i++) {
 							String plusKmer = chromosome.substring(i, i + k);
-							String minusKmer = getMinusKmer(plusKmer);
+							String minusKmer = minusSequence.substring(startIndexOfLastKmer - i, length - i);
 							canonicalKmers[i] = (plusKmer.compareTo(minusKmer) < 0) ? plusKmer : minusKmer;
 						}
+						
+						//interior minimizers - first window
+						String minimizer = canonicalKmers[0];
+						for(int j = 1; j < k; j++) {
+							minimizer = (canonicalKmers[j].compareTo(minimizer) < 0) ? canonicalKmers[j] : minimizer;
+						}
+						minimizers.add(minimizer);
+
+						//interior minimizers - later windows incrementally
+						int indexOfLastWindowStartPosition = startIndexOfLastKmer - k + 1;					
+						for(int i = 1; i <= indexOfLastWindowStartPosition; i++) {
+							if(minimizer.equals(canonicalKmers[i - 1])) {
+								minimizer = canonicalKmers[i];
+								int indexOfFirstKmerAfterWindow = i + k;
+								for(int j = i + 1; j < indexOfFirstKmerAfterWindow; j++) {
+									minimizer = (canonicalKmers[j].compareTo(minimizer) < 0) ? canonicalKmers[j] : minimizer;
+								}
+							} else {
+								int indexOfLastKmerInWindow = i + k - 1;
+								minimizer = (canonicalKmers[indexOfLastKmerInWindow].compareTo(minimizer) < 0) ? canonicalKmers[indexOfLastKmerInWindow] : minimizer;
+							}
+							
+							minimizers.add(minimizer);					
+						}
+
+						//left end minimizers, dynamic programming
+						minimizer = canonicalKmers[0];
+						minimizers.add(minimizer);
+						for(int v = 1; v <= (k - 2); v++) { //here v is not the u in (u,k) in the paper, it is the index of the last/rightmost kmer in each (u,k) window (i.e. u - 1)
+							minimizer = (canonicalKmers[v].compareTo(minimizer) < 0) ? canonicalKmers[v] : minimizer;
+							minimizers.add(minimizer);					
+						}
+
+						//right end minimizers, dynamic programming
+						minimizer = canonicalKmers[startIndexOfLastKmer];
+						minimizers.add(minimizer);
+						for(int v = startIndexOfLastKmer - 1; v >= (startIndexOfLastKmer - k + 2); v--) { //here v is not the u in (u,k) in the paper, it is the index of the first/leftmost kmer in each (u,k) window
+							minimizer = (canonicalKmers[v].compareTo(minimizer) < 0) ? canonicalKmers[v] : minimizer;
+							minimizers.add(minimizer);					
+						}
 					} else {
-						for(int i = 0; i <= indexOfLastKmerStartPosition; i++) {
+						for(int i = 0; i <= startIndexOfLastKmer; i++) {
 							if(!indicesOfInvalidKmers.contains(i)) {
 								String plusKmer = chromosome.substring(i, i + k);
-								String minusKmer = getMinusKmer(plusKmer);
+								String minusKmer = minusSequence.substring(startIndexOfLastKmer - i, length - i);
 								canonicalKmers[i] = (plusKmer.compareTo(minusKmer) < 0) ? plusKmer : minusKmer;
 							}
 						}
-					}
-					
-					//interior minimizers, maybe could be optimized
-					int indexOfLastWindowStartPosition = indexOfLastKmerStartPosition - k + 1;					
-					for(int i = 0; i <= indexOfLastWindowStartPosition; i++) {
-						//System.out.println("*************Window index: " + i + "*************");
-						//System.out.println("Window sequence: " + chromosome.substring(i, i + k + k - 1));
+						
+						//interior minimizers - first window
 						String minimizer = "Z";
-						if(canonicalKmers[i] != null) {
-							minimizer = canonicalKmers[i];
-						}
-						int indexOfFirstKmerAfterWindow = i + k;						
-						for(int j = i + 1; j < indexOfFirstKmerAfterWindow; j++) {
+						for(int j = 0; j < k; j++) {
 							if(canonicalKmers[j] != null) {
 								minimizer = (canonicalKmers[j].compareTo(minimizer) < 0) ? canonicalKmers[j] : minimizer;
 							}
 						}
-						//System.out.println("Minimizer: " + minimizer);
-						if(minimizer.length() == k) { //If the invalid letter N occurs in the exact center of a window, all kmers in the window will contain N and be invalid, Z will get through
+						if(minimizer.length() == k) {
 							minimizers.add(minimizer);
 						}
-					}
-					
-					//left end minimizers, dynamic programming
-					String minimizer = "Z";
-					if(canonicalKmers[0] != null) {
-						minimizers.add(canonicalKmers[0]);
-						minimizer = canonicalKmers[0];
-					}
-					for(int v = 1; v <= (k - 2); v++) { //here v is not the u in (u,k) in the paper, it is the index of the last/rightmost kmer in each (u,k) window (i.e. u - 1)
-						if(canonicalKmers[v] != null) {
-							minimizer = (canonicalKmers[v].compareTo(minimizer) < 0) ? canonicalKmers[v] : minimizer;
-							minimizers.add(minimizer);
+
+						//interior minimizers - later windows incrementally
+						int indexOfLastWindowStartPosition = startIndexOfLastKmer - k + 1;					
+						for(int i = 1; i <= indexOfLastWindowStartPosition; i++) {
+							if(minimizer.equals(canonicalKmers[i - 1])) {
+								minimizer = "Z";
+								int indexOfFirstKmerAfterWindow = i + k;
+								for(int j = i; j < indexOfFirstKmerAfterWindow; j++) {
+									if(canonicalKmers[j] != null) {
+										minimizer = (canonicalKmers[j].compareTo(minimizer) < 0) ? canonicalKmers[j] : minimizer;
+									}
+								}
+							} else {
+								int indexOfLastKmerInWindow = i + k - 1;
+								if(canonicalKmers[indexOfLastKmerInWindow] != null) {
+									minimizer = (canonicalKmers[indexOfLastKmerInWindow].compareTo(minimizer) < 0) ? canonicalKmers[indexOfLastKmerInWindow] : minimizer;
+								}
+							}
+							
+							if(minimizer.length() == k) {
+								minimizers.add(minimizer);
+							}
 						}
-					}
-					
-					//right end minimizers, dynamic programming
-					minimizer = "Z";
-					if(canonicalKmers[indexOfLastKmerStartPosition] != null) {
-						minimizers.add(canonicalKmers[indexOfLastKmerStartPosition]);
-						minimizer = canonicalKmers[indexOfLastKmerStartPosition];
-					}
-					for(int v = indexOfLastKmerStartPosition - 1; v >= (indexOfLastKmerStartPosition - k + 2); v--) { //here v is not the u in (u,k) in the paper, it is the index of the first/leftmost kmer in each (u,k) window
-						if(canonicalKmers[v] != null) {
-							minimizer = (canonicalKmers[v].compareTo(minimizer) < 0) ? canonicalKmers[v] : minimizer;
-							minimizers.add(minimizer);
+
+						//left end minimizers, dynamic programming
+						minimizer = "Z";
+						for(int v = 0; v <= (k - 2); v++) { //here v is not the u in (u,k) in the paper, it is the index of the last/rightmost kmer in each (u,k) window (i.e. u - 1)
+							if(canonicalKmers[v] != null) {
+								minimizer = (canonicalKmers[v].compareTo(minimizer) < 0) ? canonicalKmers[v] : minimizer;
+								minimizers.add(minimizer);
+							}
 						}
-					}
+
+						//right end minimizers, dynamic programming
+						minimizer = "Z";
+						for(int v = startIndexOfLastKmer; v >= (startIndexOfLastKmer - k + 2); v--) { //here v is not the u in (u,k) in the paper, it is the index of the first/leftmost kmer in each (u,k) window
+							if(canonicalKmers[v] != null) {
+								minimizer = (canonicalKmers[v].compareTo(minimizer) < 0) ? canonicalKmers[v] : minimizer;
+								minimizers.add(minimizer);
+							}
+						}
+					}					
 				}
 				
 				kmerTotalCount = kmerTotalCount * 2;
@@ -268,7 +335,7 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 				writer.close();
 			} catch(IOException e) {
 				e.printStackTrace();
-				return "ExceptionIO - can't open or write count file for reference genome: " + filename;
+				return "ExceptionIO - can't write count file for reference genome: " + filename;
 			}
 			//long endTime = System.nanoTime();
 			//long runningTime = (endTime - startTime) / 1000000000;
@@ -295,51 +362,6 @@ public class MNBCBuild { //Based on NaiveBayesClassifierCount_V3, only use canon
 			}
 			
 			return index;
-		}
-		
-		private String getMinusKmer(String plusKmer) {
-			String minusKmer = "";
-			
-			for(int i = k - 1; i >= 0; i--) {
-				switch(plusKmer.charAt(i)) {
-					case 'A':
-						minusKmer += "T";
-						break;
-					case 'T':
-						minusKmer += "A";
-						break;
-					case 'G':
-						minusKmer += "C";
-						break;
-					case 'C':
-						minusKmer += "G";
-						break;
-				}
-			}
-			
-			return minusKmer;
-		}
-		
-		private MutableIntSet checkIfFragOnlyContainsValidCharacters(String frag) {
-			MutableIntSet indicesOfInvalidKmers = new IntHashSet();
-			
-			int length = frag.length();
-			for(int i = 0; i < length; i++) {
-				char aChar = frag.charAt(i);
-				switch(aChar) {
-					case 'A':
-					case 'C':
-					case 'G':
-					case 'T':
-						continue;
-					default:
-						for(int j = i - k + 1; j <= i; j++) {
-							indicesOfInvalidKmers.add(j);
-						}
-				}
-			}
-			
-			return indicesOfInvalidKmers;
 		}
 		
 		private ArrayList<String> readGenomeFile(File genomeFile) throws FileNotFoundException, IOException {
