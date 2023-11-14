@@ -5,32 +5,49 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GenomeTaxidFinder {
+public class MNBC_taxonomy {
+	public static String genomeDirPath; //Directory containing downloaded RefSeq reference genomes of interest, these genomes will be used as the reference database
+	public static String refseqAssemblySummaryPath; //Example filename: assembly_summary_refseq.txt
+	public static String nodeDmpPath; //Example filename: nodes.dmp
+	public static String outputPath; //Example filename: refSeq_prokaryote_complete_genomes_ok_status_metainfo.txt
+	
 	public static void main(String[] args) {
-		String genomeDirPath = args[0]; //Directory containing downloaded RefSeq reference genomes of interest, these genomes will be used as the reference database
-		String refseqAssemblySummaryPath = args[1]; //Example filename: assembly_summary_refseq.txt
-		String nodeDmpPath = args[2]; //Example filename: nodes.dmp
-		String outputPath = args[3]; //Example filename: refSeq_prokaryote_complete_genomes_ok_status_metainfo.txt
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].startsWith("-")) {
+				switch(args[i].charAt(1)) {
+					case 'a':
+						refseqAssemblySummaryPath = args[i + 1];
+						break;
+					case 'n':
+						nodeDmpPath = args[i + 1];
+						break;
+					case 'i':
+						genomeDirPath = args[i + 1];
+						break;
+					case 'o':
+						outputPath = args[i + 1];
+						break;
+					case 'h':
+						printHelpInfo();
+						System.exit(0);
+				}
+			}
+		}
 		
-		ArrayList<String> refseqAssemblyIDs = readGenomesSummaryTable(genomeDirPath);
+		ArrayList<String> refseqAssemblyIDs = readAssemlyIds(genomeDirPath);
 		HashMap<String, String[]> refseqAssemblyID2Taxid = readRefseqAssemblySummary(refseqAssemblySummaryPath);
 		HashMap<String, String> taxid2TaxLevel = new HashMap<String, String>();
 		HashMap<String, String> taxid2ParentTaxid = readNodeDmp(nodeDmpPath, taxid2TaxLevel);
 		
-		refseqAssemblyID2Taxid.put("GCF_009387985.1", new String[] {"1", "2601652", "Bacillus phage 000TH010"}); //Patch for viruses
-		refseqAssemblyID2Taxid.put("GCF_009388005.1", new String[] {"1", "2601660", "Bacillus phage 049ML001"}); //Patch for viruses
-		refseqAssemblyID2Taxid.put("GCF_003613715.1", new String[] {"1", "2315627", "Bacillus phage Ray17"}); //Patch for viruses
-		refseqAssemblyID2Taxid.put("GCF_008221585.1", new String[] {"1", "2591379", "Bacillus phage vB_BspS_SplendidRed"}); //Patch for viruses
-		
 		try {
 			PrintWriter writer = new PrintWriter(outputPath);
-			writer.print("RefSeq assembly ID\ttaxid.sub-species\ttaxid.species\ttaxid.genus\ttaxid.family\ttaxid.order\ttaxid.class\ttaxid.phylum\ttaxid.superkingdom\tOrganism name\n");
+			writer.print("RefSeq assembly ID\ttaxid.species\ttaxid.genus\ttaxid.family\ttaxid.order\ttaxid.class\ttaxid.phylum\ttaxid.superkingdom\tOrganism name\n");
 			generateGenomeTaxonomyTableRows(writer, refseqAssemblyIDs, refseqAssemblyID2Taxid, taxid2TaxLevel, taxid2ParentTaxid);
 			writer.close();
 		} catch(Exception e) {
 			System.out.println("Error in writing results to " + outputPath);
 			e.printStackTrace();
-			System.exit(3);
+			System.exit(1);
 		}
 		
 		System.out.println("done");
@@ -39,43 +56,26 @@ public class GenomeTaxidFinder {
 	private static void generateGenomeTaxonomyTableRows(PrintWriter writer, ArrayList<String> refseqAssemblyIDs, HashMap<String, String[]> refseqAssemblyID2Taxid, HashMap<String, String> taxid2TaxLevel, HashMap<String, String> taxid2ParentTaxid) {
 		for(String assemblyID : refseqAssemblyIDs) {
 			String row = assemblyID;
-			String[] ranks = new String[8];
+			String[] ranks = new String[7];
 			//System.out.println("assemblyID " + assemblyID);
 			String[] taxidAndName = refseqAssemblyID2Taxid.get(assemblyID);
+			if(taxidAndName == null) {
+				System.out.println("ERROR: couldn't find the assembly ID " + assemblyID + " in the assembly summary file! Exiting");
+				System.exit(1);;
+			}			
 			
-			if(taxidAndName[0].equals("1")) {
-				ranks[0] = "";
-				ranks[1] = taxidAndName[1];
-				String supposedSpeciesLevel = taxid2TaxLevel.get(ranks[1]);
-				if(!supposedSpeciesLevel.equals("species")) {
-					System.out.println("Error: " + ranks[1] + " is supposed to be a species according to refseqAssemblySummary, but node.dmp reports " + supposedSpeciesLevel);
-					System.exit(2);
-				}
-				
-				fillRanksArray(ranks[1], ranks, taxid2TaxLevel, taxid2ParentTaxid);				
-			} else {
-				ranks[0] = taxidAndName[1];				
-				/*String supposedtrainOrSubstrainLevel = taxid2TaxLevel.get(taxidAndName[1]);				
-				if(supposedtrainOrSubstrainLevel.equals("strain")) {
-					ranks[0] = taxidAndName[1];					
-				} else {
-					String parentSupposedStrainTaxid = taxid2ParentTaxid.get(taxidAndName[1]);
-					String supposedStrainLevel = taxid2TaxLevel.get(parentSupposedStrainTaxid);
-					if(supposedStrainLevel.equals("strain")) {
-						ranks[0] = parentSupposedStrainTaxid;
-					} else {
-						ranks[0] = taxidAndName[1];						
-						warning.println("Warning: " + taxidAndName[1] + " subspecies id is used as a strain id for " + taxidAndName[2] + "; parent species id " + parentSupposedStrainTaxid + " at level " + supposedStrainLevel);						
-					}
-				}*/
-				
-				fillRanksArray(ranks[0], ranks, taxid2TaxLevel, taxid2ParentTaxid);
-			}
+			ranks[0] = taxidAndName[0];
+			String supposedSpeciesLevel = taxid2TaxLevel.get(ranks[0]);
+			if(!supposedSpeciesLevel.equals("species")) {
+				System.out.println("ERROR: " + ranks[1] + " is supposed to be a species according to the assembly summary file, but node.dmp reports " + supposedSpeciesLevel + "! Exiting");
+				System.exit(1);
+			}				
+			fillRanksArray(ranks[0], ranks, taxid2TaxLevel, taxid2ParentTaxid);			
 			
 			for(String rank : ranks) {
 				row += "\t" + rank;
 			}
-			row += "\t" + taxidAndName[2] + "\n";
+			row += "\t" + taxidAndName[1] + "\n";
 			
 			//System.out.println("One row result: " + row);
 			writer.print(row);
@@ -85,35 +85,39 @@ public class GenomeTaxidFinder {
 	private static void fillRanksArray(String initial, String[] ranks, HashMap<String, String> taxid2TaxLevel, HashMap<String, String> taxid2ParentTaxid) {
 		String currentTaxid = initial;
 		while(!currentTaxid.isEmpty()) {
+			if(currentTaxid.equals("1")) {
+				System.out.println("ERROR: node.dmp doesn't include all 7 primary-level taxon ids for " + initial + "! Exiting");
+				System.exit(1);
+			}
 			String parentTaxid = taxid2ParentTaxid.get(currentTaxid);
 			String level = taxid2TaxLevel.get(parentTaxid);
 			
 			if(level.equals("species")) {
-				ranks[1] = parentTaxid;
+				ranks[0] = parentTaxid;
 				currentTaxid = parentTaxid;
 				continue;
 			} else if(level.equals("genus")) {
-				ranks[2] = parentTaxid;
+				ranks[1] = parentTaxid;
 				currentTaxid = parentTaxid;
 				continue;
 			} else if(level.equals("family")) {
-				ranks[3] = parentTaxid;
+				ranks[2] = parentTaxid;
 				currentTaxid = parentTaxid;
 				continue;
 			} else if(level.equals("order")) {
-				ranks[4] = parentTaxid;
+				ranks[3] = parentTaxid;
 				currentTaxid = parentTaxid;
 				continue;
 			} else if(level.equals("class")) {
-				ranks[5] = parentTaxid;
+				ranks[4] = parentTaxid;
 				currentTaxid = parentTaxid;
 				continue;
 			} else if(level.equals("phylum")) {
-				ranks[6] = parentTaxid;
+				ranks[5] = parentTaxid;
 				currentTaxid = parentTaxid;
 				continue;
 			} else if(level.equals("superkingdom")) {
-				ranks[7] = parentTaxid;
+				ranks[6] = parentTaxid;
 				currentTaxid = "";
 			} else {
 				currentTaxid = parentTaxid;
@@ -153,12 +157,8 @@ public class GenomeTaxidFinder {
 			String line = reader.readLine();
 			line = reader.readLine();
 			while((line = reader.readLine()) != null) {
-				String[] fields = line.split("\t");
-				if(fields[5].equals(fields[6])) {
-					refseqAssemblyID2Taxid.put(fields[0], new String[] {"1", fields[5], fields[7] + " " + fields[8]});
-				} else {
-					refseqAssemblyID2Taxid.put(fields[0], new String[] {"0", fields[5], fields[7] + " " + fields[8]});
-				}				
+				String[] fields = line.split("\t");				
+				refseqAssemblyID2Taxid.put(fields[0], new String[] {fields[6], fields[7] + " " + fields[8]});							
 			}
 			reader.close();
 		} catch(Exception e) {
@@ -171,7 +171,7 @@ public class GenomeTaxidFinder {
 		return refseqAssemblyID2Taxid;
 	}
 	
-	private static ArrayList<String> readGenomesSummaryTable(String genomeDirPath) {
+	private static ArrayList<String> readAssemlyIds(String genomeDirPath) {
 		ArrayList<String> refseqAssemblyIDs = new ArrayList<String>();
 		
 		File[] genomes = new File(genomeDirPath).listFiles();
@@ -180,7 +180,16 @@ public class GenomeTaxidFinder {
 			refseqAssemblyIDs.add(fields[0] + "_" + fields[1]);
 		}
 		
-		System.out.println("Finished reading genome IDs from " + genomeDirPath);
+		System.out.println("Finished reading " + refseqAssemblyIDs.size() + " assembly IDs from " + genomeDirPath);
 		return refseqAssemblyIDs;
+	}
+	
+	private static void printHelpInfo() {
+		System.out.println("This MNBC_taxonomy tool (v1.0) finds taxonomy information for a set of reference sequences.");
+		System.out.println("-h:	Show this help menu");
+		System.out.println("-a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt for RefSeq");
+		System.out.println("-n:	Taxonomy node.dmp file downoaded from NCBI");		
+		System.out.println("-i:	Input directory containing the (gzipped) files of reference sequences (e.g. *.fna.gz downloaded from RefSeq");
+		System.out.println("-o:	Output taxonomy file");
 	}
 }
