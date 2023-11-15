@@ -139,7 +139,7 @@ public class MNBC_classify {
 			PrintWriter writer = null;
 			if(finishedReadIds == null) {
 				writer = new PrintWriter(new FileWriter(outputFilePath), true);
-				writer.println("Read\tGenome\tStrain\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tSuperkingdom\tMaxScore");
+				writer.println("Read\tGenome\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tSuperkingdom\tMaxScore");
 				System.out.println("Created writer to new result file " + outputFilePath);
 			} else {
 				writer = new PrintWriter(new FileWriter(outputFilePath, true), true);
