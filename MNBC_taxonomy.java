@@ -67,7 +67,7 @@ public class MNBC_taxonomy {
 			ranks[0] = taxidAndName[0];
 			String supposedSpeciesLevel = taxid2TaxLevel.get(ranks[0]);
 			if(!supposedSpeciesLevel.equals("species")) {
-				System.out.println("ERROR: " + ranks[1] + " is supposed to be a species according to the assembly summary file, but node.dmp reports " + supposedSpeciesLevel + "! Exiting");
+				System.out.println("ERROR: " + ranks[1] + " is supposed to be a species according to the assembly summary file, but nodes.dmp reports " + supposedSpeciesLevel + "! Exiting");
 				System.exit(1);
 			}				
 			fillRanksArray(ranks[0], ranks, taxid2TaxLevel, taxid2ParentTaxid);			
@@ -86,7 +86,7 @@ public class MNBC_taxonomy {
 		String currentTaxid = initial;
 		while(!currentTaxid.isEmpty()) {
 			if(currentTaxid.equals("1")) {
-				System.out.println("ERROR: node.dmp doesn't include all 7 primary-level taxon ids for " + initial + "! Exiting");
+				System.out.println("ERROR: nodes.dmp doesn't include all 7 primary-level taxon ids for " + initial + "! Exiting");
 				System.exit(1);
 			}
 			String parentTaxid = taxid2ParentTaxid.get(currentTaxid);
@@ -140,12 +140,12 @@ public class MNBC_taxonomy {
 			}
 			reader.close();
 		} catch(Exception e) {
-			System.out.println("Error in reading node.dmp file: " + nodeDmpPath);
+			System.out.println("Error in reading nodes.dmp file: " + nodeDmpPath);
 			e.printStackTrace();
 			System.exit(1);
 		}
 		
-		System.out.println("Finished reading node.dmp file : " + nodeDmpPath);
+		System.out.println("Finished reading nodes.dmp file : " + nodeDmpPath);
 		return taxid2ParentTaxid;
 	}
 	
@@ -162,12 +162,12 @@ public class MNBC_taxonomy {
 			}
 			reader.close();
 		} catch(Exception e) {
-			System.out.println("Error in reading Refseq assembly summary file: " + refseqAssemblySummaryPath);
+			System.out.println("Error in reading assembly summary file: " + refseqAssemblySummaryPath);
 			e.printStackTrace();
 			System.exit(1);
 		}
 		
-		System.out.println("Finished reading Refseq assembly summary file : " + refseqAssemblySummaryPath);
+		System.out.println("Finished reading assembly summary file : " + refseqAssemblySummaryPath);
 		return refseqAssemblyID2Taxid;
 	}
 	
@@ -185,11 +185,11 @@ public class MNBC_taxonomy {
 	}
 	
 	private static void printHelpInfo() {
-		System.out.println("This MNBC_taxonomy tool (v1.0) finds taxonomy information for a set of reference sequences.");
+		System.out.println("This MNBC_taxonomy tool (v1.0) finds taxonomy information for reference sequences in a database.");
 		System.out.println("-h:	Show this help menu");
-		System.out.println("-a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt for RefSeq");
-		System.out.println("-n:	Taxonomy node.dmp file downoaded from NCBI");		
-		System.out.println("-i:	Input directory containing the (gzipped) files of reference sequences (e.g. *.fna.gz downloaded from RefSeq");
-		System.out.println("-o:	Output taxonomy file");
+		System.out.println("-a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))");
+		System.out.println("-n:	Taxonomy nodes.dmp file downoaded from NCBI (e.g. taxdmp.zip from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)");		
+		System.out.println("-i:	Input directory containing the (gzipped) files of reference sequences in the database (e.g. *.fna.gz downloaded from RefSeq)");
+		System.out.println("-o:	Output taxonomy file for the database");
 	}
 }

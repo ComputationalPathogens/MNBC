@@ -127,7 +127,7 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-k:	K-mer length");
 		System.out.println("-c:	Number of threads");		
-		System.out.println("-i:	Input directory containing the (gzipped) files of reference sequences (e.g. *.fna.gz downloaded from RefSeq");
+		System.out.println("-i:	Input directory containing the (gzipped) files of reference sequences (e.g. *.fna.gz downloaded from RefSeq)");
 		System.out.println("-o:	Output database directory");
 		System.out.println("-f (optional): The minimum filtering threshold on the sequence length (an integer not smaller than 0, the default value is 0). Sequences with lengths below this threshold will be ignored, and all plasmids will be ignored.");
 		System.out.println("-b (optional): Log file of the previous prematurely killed run (i.e. Slurm .out file)");
