@@ -83,9 +83,8 @@ public class MNBC_classify {
 			System.out.println("WARNING - Number of available cores " + numberOfCores + " is less than requested number of threads " + numberOfThreads + ", exiting");
 			System.exit(1);
 		}
-		int queueSize = numberOfThreads + 50;
-		readQueue = new ArrayBlockingQueue<String[]>(queueSize);
-		resultQueue = new ArrayBlockingQueue<String>(queueSize);
+		readQueue = new ArrayBlockingQueue<String[]>(numberOfThreads + 10);
+		resultQueue = new ArrayBlockingQueue<String>(numberOfThreads + 10);
 		
 		File outputFile = new File(outputFilePath);
 		if(outputFile.exists()) {			
@@ -843,8 +842,8 @@ public class MNBC_classify {
 		System.out.println("-k:	K-mer length");
 		System.out.println("-c:	Number of threads");
 		System.out.println("-d:	Input database directory");
-		System.out.println("-m:	Input metainfo file");
-		System.out.println("-o:	Final classification file");
+		System.out.println("-m:	Input taxonomy file");
+		System.out.println("-o:	Output classification file");
 		System.out.println("-t:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.");
 		System.out.println("-p (optional): Penalty for non-existent k-mers (default -2000)");
 	}
