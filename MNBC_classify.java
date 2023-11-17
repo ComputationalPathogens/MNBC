@@ -83,8 +83,9 @@ public class MNBC_classify {
 			System.out.println("WARNING - Number of available cores " + numberOfCores + " is less than requested number of threads " + numberOfThreads + ", exiting");
 			System.exit(1);
 		}
-		readQueue = new ArrayBlockingQueue<String[]>(numberOfThreads + 10);
-		resultQueue = new ArrayBlockingQueue<String>(numberOfThreads + 10);
+		int queueSize = numberOfThreads + 50;
+		readQueue = new ArrayBlockingQueue<String[]>(queueSize);
+		resultQueue = new ArrayBlockingQueue<String>(queueSize);
 		
 		File outputFile = new File(outputFilePath);
 		if(outputFile.exists()) {			
@@ -387,21 +388,21 @@ public class MNBC_classify {
 		private void addKmersOfOneTestFrag(String testFrag, MutableIntSet kmers) {
 			//Get minus sequence
 			MutableIntSet indicesOfInvalidKmers = new IntHashSet();
-			String minusSequence = "";
+			StringBuilder minusSequence = new StringBuilder();
 			int length = testFrag.length();
 			for(int i = length - 1; i >= 0; i--) {
 				switch(testFrag.charAt(i)) {
 					case 'A':
-						minusSequence += "T";
+						minusSequence.append('T');
 						break;
 					case 'C':
-						minusSequence += "G";
+						minusSequence.append('G');
 						break;
 					case 'G':
-						minusSequence += "C";
+						minusSequence.append('C');
 						break;
 					case 'T':
-						minusSequence += "A";
+						minusSequence.append('A');
 						break;
 					default:
 						for(int j = i - k + 1; j <= i; j++) {

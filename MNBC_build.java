@@ -174,29 +174,29 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 			int kmerTotalCount = 0; //Total number of valid kmers in both strands
 			
 			try {
-				ArrayList<String> chromosomes = readGenomeFile(referenceGenome);
+				ArrayList<StringBuilder> chromosomes = readGenomeFile(referenceGenome);
 				System.out.println("Task " + id + " - read " + chromosomes.size() + " chromosomes");
 				
 				for(int m = 0; m < chromosomes.size(); m++) {
 					System.out.println("Task " + id + " - start processing " + m + "th chromosome...");
-					String chromosome = chromosomes.get(m);
+					StringBuilder chromosome = chromosomes.get(m);
 					
 					MutableIntSet indicesOfInvalidKmers = new IntHashSet();
-					String minusSequence = "";
+					StringBuilder minusSequence = new StringBuilder();
 					int length = chromosome.length();
 					for(int i = length - 1; i >= 0; i--) {
 						switch(chromosome.charAt(i)) {
 							case 'A':
-								minusSequence += "T";
+								minusSequence.append('T');
 								break;
 							case 'C':
-								minusSequence += "G";
+								minusSequence.append('G');
 								break;
 							case 'G':
-								minusSequence += "C";
+								minusSequence.append('C');
 								break;
 							case 'T':
-								minusSequence += "A";
+								minusSequence.append('A');
 								break;
 							default:
 								for(int j = i - k + 1; j <= i; j++) {
@@ -322,7 +322,7 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 				System.out.println("Task " + id + " - valid k-mer count: " + kmerTotalCount + ", minimizer count: " + minimizers.size());				
 			} catch(Exception e) {
 				e.printStackTrace();
-				return "Task " + id + " - Exception - can't find file " + filename;
+				return "Task " + id + " - Exception on " + filename;
 			}
 			
 			try {
@@ -335,7 +335,7 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 				writer.close();
 			} catch(IOException e) {
 				e.printStackTrace();
-				return "ExceptionIO - can't write count file for reference genome: " + filename;
+				return "Task " + id + " - Exception on writing count file of reference sequence: " + filename;
 			}
 			//long endTime = System.nanoTime();
 			//long runningTime = (endTime - startTime) / 1000000000;
@@ -364,9 +364,9 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 			return index;
 		}
 		
-		private ArrayList<String> readGenomeFile(File genomeFile) throws FileNotFoundException, IOException {
-			ArrayList<String> chromosomes = new ArrayList<String>();		
-			String chromosome = "";
+		private ArrayList<StringBuilder> readGenomeFile(File genomeFile) throws FileNotFoundException, IOException {
+			ArrayList<StringBuilder> chromosomes = new ArrayList<StringBuilder>();		
+			StringBuilder chromosome = new StringBuilder();
 			int chromosomeLength = 0;
 			boolean retain = true;
 			
@@ -384,10 +384,10 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 					
 					if(chromosomeLength != 0) {						
 						if(chromosomeLength >= lengthThreshold) {
-							chromosomes.add(chromosome.toUpperCase());							
+							chromosomes.add(chromosome);							
 						}
 						chromosomeLength = 0;
-						chromosome = "";						
+						chromosome = new StringBuilder();				
 					}
 					
 					if(line.contains("plasmid")) {
@@ -400,14 +400,14 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 				} else {
 					if(retain) {
 						chromosomeLength += line.length();
-						chromosome = chromosome.concat(line);
+						chromosome = chromosome.append(line.toUpperCase());
 						continue;
 					}
 				}
 			}			
 			if(chromosomeLength != 0) {
 				if(chromosomeLength >= lengthThreshold) {
-					chromosomes.add(chromosome.toUpperCase());
+					chromosomes.add(chromosome);
 				}
 			}			
 			reader.close();			
