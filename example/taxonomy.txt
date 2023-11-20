@@ -1,3 +1,3 @@
-RefSeq assembly ID	taxid.sub-species	taxid.species	taxid.genus	taxid.family	taxid.order	taxid.class	taxid.phylum	taxid.superkingdom	Organism name
-GCF_000834455.1		29485	629	1903411	91347	1236	1224	2	Yersinia rohdei strain=YRA
-GCF_022869985.1	1038927	562	561	543	91347	1236	1224	2	Escherichia coli O104:H4 strain=PartB-EcoliO104H4-RM8376
+RefSeq assembly ID	taxid.species	taxid.genus	taxid.family	taxid.order	taxid.class	taxid.phylum	taxid.superkingdom	Organism name
+GCF_000834455.1	29485	629	1903411	91347	1236	1224	2	Yersinia rohdei strain=YRA
+GCF_022869985.1	562	561	543	91347	1236	1224	2	Escherichia coli O104:H4 strain=PartB-EcoliO104H4-RM8376
