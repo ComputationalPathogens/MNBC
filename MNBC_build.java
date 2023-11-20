@@ -79,7 +79,7 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 		
 		ExecutorService nested = Executors.newFixedThreadPool(numberOfThreads);
 		CompletionService<String> pool = new ExecutorCompletionService<String>(nested);
-		System.out.println("Created a thread pool");
+		//System.out.println("Created a thread pool");
 		
 		int taskCounter = 0;
 		File[] trainingGenomes = new File(referenceGenomeDirPath).listFiles();
@@ -96,11 +96,11 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 				}				
 			}			
 		}		
-		System.out.println("Submitted all " + taskCounter + " tasks");
+		System.out.println("Building " + taskCounter + " reference sequences");
 		
 		for(int i = 0; i < taskCounter; i++) {
 			try {
-				System.out.println("Waiting to get outcome of " + i + "th returned task...");
+				//System.out.println("Waiting to get outcome of " + i + "th returned task...");
 				String outcome = pool.take().get();
 				
 				if(outcome.contains("Finished")) {

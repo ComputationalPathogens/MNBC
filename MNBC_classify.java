@@ -99,11 +99,11 @@ public class MNBC_classify {
 		
 		ExecutorService nested = Executors.newFixedThreadPool(numberOfCores - 1);
 		CompletionService<String> pool = new ExecutorCompletionService<String>(nested);
-		System.out.println("Created thread pool");
+		//System.out.println("Created thread pool");
 		for(int i = 0; i < countFiles.length; i++) {
 			pool.submit(new DBReader(countFiles[i], i));
 		}
-		System.out.println("Submitted " + countFiles.length + " tasks");
+		//System.out.println("Reading DB of size " + countFiles.length);
 		
 		for(int i = 0; i < countFiles.length; i++) {
 			try {
@@ -122,17 +122,19 @@ public class MNBC_classify {
 			}
 		}		
 		nested.shutdown();
+		long endTime = System.nanoTime();
+		System.out.println("Read DB in " + + ((endTime - startTime) / 1000000000) + " seconds");
 		
 		completeGenomeId2TaxIds = readCompleteMeta(metaFilePath);
-		System.out.println("Read meta file and mapped all " + completeGenomeId2TaxIds.size() + " reference genomes");
+		//System.out.println("Read meta file of size" + completeGenomeId2TaxIds.size());
 		
 		new Thread(new Producer()).start();
-		System.out.println("Started producer thread");
+		//System.out.println("Started producer thread");
 		
 		for(int i = 0; i < numberOfThreads; i++) {
 			new Thread(new Consumer(i)).start();
 		}
-		System.out.println("Started " + numberOfThreads + " consumer threads");
+		System.out.println("Start classifying");
 		
 		int completedConsumerCounter = 0;
 		try {
@@ -140,17 +142,17 @@ public class MNBC_classify {
 			if(finishedReadIds == null) {
 				writer = new PrintWriter(new FileWriter(outputFilePath), true);
 				writer.println("Read\tGenome\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tSuperkingdom\tMaxScore");
-				System.out.println("Created writer to new result file " + outputFilePath);
+				//System.out.println("Created result file " + outputFilePath);
 			} else {
 				writer = new PrintWriter(new FileWriter(outputFilePath, true), true);
-				System.out.println("Created writer to existing result file " + outputFilePath);
+				//System.out.println("Appending to result file " + outputFilePath);
 			}			
 			
 			while(completedConsumerCounter < numberOfThreads) {
 				String outcome = resultQueue.take();
 				if(outcome.endsWith("- finished")) {
 					completedConsumerCounter++;
-					System.out.println(outcome);
+					//System.out.println(outcome);
 				} else {
 					writer.println(outcome);
 				}
@@ -161,7 +163,7 @@ public class MNBC_classify {
 			System.exit(1);
 		}
 		
-		long endTime = System.nanoTime();
+		endTime = System.nanoTime();
 		System.out.println("done in " + ((endTime - startTime) / 1000000000) + " seconds");
 	}
 	
@@ -567,23 +569,23 @@ public class MNBC_classify {
 					}
 					
 					if(startPath.contains(".fasta")) {
-						System.out.println("Producer - start reading paired-end FASTA files " + startPath + " and " + endPath);
+						System.out.println("Start reading paired-end FASTA files " + startPath + " and " + endPath);
 						readTestFragFastaFiles(reader1, reader2);
 					} else {
-						System.out.println("Producer - start reading paired-end FASTQ files " + startPath + " and " + endPath);
+						System.out.println("Start reading paired-end FASTQ files " + startPath + " and " + endPath);
 						readTestFragFastqFiles(reader1, reader2);
 					}					
 				} else {				
 					if(startPath.contains(".fasta")) {
-						System.out.println("Producer - start reading FASTA file " + startPath);
+						System.out.println("Start reading FASTA file " + startPath);
 						readTestFragFastaFile(reader1);
 					} else {
-						System.out.println("Producer - start reading FASTQ file " + startPath);
+						System.out.println("Start reading FASTQ file " + startPath);
 						readTestFragFastqFile(reader1);
 					}					
 				}
 				
-				System.out.println("Producer - finished reading " + readCounter + " reads");
+				System.out.println("Finished " + readCounter + " reads");
 			} catch(Exception e) {
 				System.out.println("Producer - error occurred, exiting");
 				e.printStackTrace();
