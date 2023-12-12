@@ -231,6 +231,10 @@ public class MNBC_classify {
 							MutableIntSet readMinimizers = new IntHashSet();							
 							addKmersOfOneTestFrag(read[1], readMinimizers);
 							addKmersOfOneTestFrag(read[2], readMinimizers);
+							if(readMinimizers.isEmpty()) {
+								resultQueue.put(read[0] + "\tnull\tnull\tnull\tnull\tnull\tnull\tnull\tnull\t1");
+								return;
+							}
 
 							float maxScore = Float.NEGATIVE_INFINITY;
 							MutableIntSet genomeIdsWithMaxScore = new IntHashSet();
@@ -296,6 +300,10 @@ public class MNBC_classify {
 						} else {
 							MutableIntSet readMinimizers = new IntHashSet();							
 							addKmersOfOneTestFrag(read[1], readMinimizers);
+							if(readMinimizers.isEmpty()) {
+								resultQueue.put(read[0] + "\tnull\tnull\tnull\tnull\tnull\tnull\tnull\tnull\t1");
+								return;
+							}
 							
 							float maxScore = Float.NEGATIVE_INFINITY;
 							MutableIntSet genomeIdsWithMaxScore = new IntHashSet();
@@ -387,10 +395,14 @@ public class MNBC_classify {
 		}
 		
 		private void addKmersOfOneTestFrag(String testFrag, MutableIntSet kmers) {
+			int length = testFrag.length();
+			if(length < k) {
+				return;
+			}
+			
 			//Get minus sequence
 			MutableIntSet indicesOfInvalidKmers = new IntHashSet();
-			StringBuilder minusSequence = new StringBuilder();
-			int length = testFrag.length();
+			StringBuilder minusSequence = new StringBuilder();			
 			for(int i = length - 1; i >= 0; i--) {
 				switch(testFrag.charAt(i)) {
 					case 'A':
@@ -421,6 +433,38 @@ public class MNBC_classify {
 					String plusKmer = testFrag.substring(i, i + k);
 					String minusKmer = minusSequence.substring(startIndexOfLastKmer - i, length - i);
 					canonicalKmers[i] = (plusKmer.compareTo(minusKmer) < 0) ? plusKmer : minusKmer;
+				}
+				
+				if(length < (2 * k - 1)) { //read length not reaching one window's length
+					//left end minimizers, dynamic programming					
+					String minimizer = canonicalKmers[0];
+					minimizers.add(minimizer);
+					for(int v = 1; v < canonicalKmers.length; v++) { //here v is not the u in (u,k) in the paper, it is the index of the last/rightmost kmer in each (u,k) window (i.e. u - 1)
+						minimizer = (canonicalKmers[v].compareTo(minimizer) < 0) ? canonicalKmers[v] : minimizer;
+						minimizers.add(minimizer);					
+					}
+
+					for(String aMinimizer : minimizers) {
+						int index = 0;
+						
+						int lastCharIndex = k - 1;
+						for(int i = lastCharIndex; i >= 0; i--) {
+							switch(aMinimizer.charAt(i)) {
+								case 'C':
+									index += (int) Math.pow(4, lastCharIndex - i);
+									break;
+								case 'G':
+									index += 2 * ((int) Math.pow(4, lastCharIndex - i));
+									break;
+								case 'T':
+									index += 3 * ((int) Math.pow(4, lastCharIndex - i));
+									break;
+							}
+						}
+						
+						kmers.add(index);
+					}
+					return;
 				}
 				
 				//interior minimizers - first window
@@ -469,6 +513,39 @@ public class MNBC_classify {
 						String minusKmer = minusSequence.substring(startIndexOfLastKmer - i, length - i);
 						canonicalKmers[i] = (plusKmer.compareTo(minusKmer) < 0) ? plusKmer : minusKmer;
 					}
+				}
+				
+				if(length < (2 * k - 1)) { //read length not reaching one window's length
+					//left end minimizers, dynamic programming
+					String minimizer = "Z";
+					for(int v = 0; v < canonicalKmers.length; v++) { //here v is not the u in (u,k) in the paper, it is the index of the last/rightmost kmer in each (u,k) window (i.e. u - 1)
+						if(canonicalKmers[v] != null) {
+							minimizer = (canonicalKmers[v].compareTo(minimizer) < 0) ? canonicalKmers[v] : minimizer;
+							minimizers.add(minimizer);
+						}
+					}
+					
+					for(String aMinimizer : minimizers) {
+						int index = 0;
+						
+						int lastCharIndex = k - 1;
+						for(int i = lastCharIndex; i >= 0; i--) {
+							switch(aMinimizer.charAt(i)) {
+								case 'C':
+									index += (int) Math.pow(4, lastCharIndex - i);
+									break;
+								case 'G':
+									index += 2 * ((int) Math.pow(4, lastCharIndex - i));
+									break;
+								case 'T':
+									index += 3 * ((int) Math.pow(4, lastCharIndex - i));
+									break;
+							}
+						}
+						
+						kmers.add(index);
+					}
+					return;			
 				}
 				
 				//interior minimizers - first window
