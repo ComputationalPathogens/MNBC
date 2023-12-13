@@ -233,7 +233,7 @@ public class MNBC_classify {
 							addKmersOfOneTestFrag(read[2], readMinimizers);
 							if(readMinimizers.isEmpty()) {
 								resultQueue.put(read[0] + "\tnull\tnull\tnull\tnull\tnull\tnull\tnull\tnull\t1");
-								return;
+								continue;
 							}
 
 							float maxScore = Float.NEGATIVE_INFINITY;
@@ -302,7 +302,7 @@ public class MNBC_classify {
 							addKmersOfOneTestFrag(read[1], readMinimizers);
 							if(readMinimizers.isEmpty()) {
 								resultQueue.put(read[0] + "\tnull\tnull\tnull\tnull\tnull\tnull\tnull\tnull\t1");
-								return;
+								continue;
 							}
 							
 							float maxScore = Float.NEGATIVE_INFINITY;
