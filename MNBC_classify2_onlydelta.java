@@ -26,7 +26,7 @@ import org.eclipse.collections.api.set.primitive.MutableIntSet;
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
-public class MNBC_classify2_5scores {
+public class MNBC_classify2_onlydelta {
 	private static int k;
 	private static int numberOfThreads;
 	private static float kmerPenalty = -2000.0F;
@@ -326,11 +326,7 @@ public class MNBC_classify2_5scores {
 								} else {
 									MutableIntList genomeIdsWithScore = new IntArrayList();
 									genomeIdsWithScore.add(i);
-									topScores.put(score, genomeIdsWithScore);
-									
-									if(topScores.size() > 5) {
-										topScores.pollFirstEntry();
-									}
+									topScores.put(score, genomeIdsWithScore);									
 								}
 							}
 							
@@ -343,8 +339,7 @@ public class MNBC_classify2_5scores {
 								outcome += "\t" + predictedGenomeId;
 								for(String predictedId : predictedTaxonIds) {
 									outcome += "\t" + predictedId;
-								}
-								resultQueue.put(outcome);
+								}								
 							} else {
 								System.out.println("Read " + read[0] + " has " + votingGenomes.size() + " voting genomes");
 								HashMap<String, ArrayList<String>> speciesId2GenomeIds = fillSpeciesId2GenomeIds(votingGenomes);								
@@ -364,8 +359,8 @@ public class MNBC_classify2_5scores {
 								for(String taxonId : taxonIds) {
 									outcome += "\t" + taxonId;
 								}
-								resultQueue.put(outcome);
-							}						
+							}
+							resultQueue.put(outcome);
 						}
 					}
 				}

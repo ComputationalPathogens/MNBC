@@ -26,7 +26,7 @@ import org.eclipse.collections.api.set.primitive.MutableIntSet;
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
-public class MNBC_classify2_5scores {
+public class MNBC_classify2_15scores {
 	private static int k;
 	private static int numberOfThreads;
 	private static float kmerPenalty = -2000.0F;
@@ -328,7 +328,7 @@ public class MNBC_classify2_5scores {
 									genomeIdsWithScore.add(i);
 									topScores.put(score, genomeIdsWithScore);
 									
-									if(topScores.size() > 5) {
+									if(topScores.size() > 15) {
 										topScores.pollFirstEntry();
 									}
 								}
