@@ -20,13 +20,14 @@ import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
 
 import org.eclipse.collections.api.iterator.IntIterator;
-import org.eclipse.collections.api.iterator.MutableIntIterator;
 import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.api.set.primitive.MutableIntSet;
+import org.eclipse.collections.api.tuple.primitive.IntFloatPair;
 import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
+import org.eclipse.collections.impl.map.mutable.primitive.IntFloatHashMap;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
-public class MNBC_classify2 {
+public class MNBC_classify3 {
 	private static int k;
 	private static int numberOfThreads;
 	private static float kmerPenalty = -2000.0F;
@@ -146,7 +147,7 @@ public class MNBC_classify2 {
 			PrintWriter writer = null;
 			if(finishedReadIds == null) {
 				writer = new PrintWriter(new FileWriter(outputFilePath), true);
-				writer.println("Read\tGenome\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tSuperkingdom\tMaxScore");
+				writer.println("Read\tGenome\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tSuperkingdom");
 				//System.out.println("Created result file " + outputFilePath);
 			} else {
 				writer = new PrintWriter(new FileWriter(outputFilePath, true), true);
@@ -334,11 +335,11 @@ public class MNBC_classify2 {
 								}
 							}
 							
-							MutableIntList votingGenomes = processTopScores(topScores);							
+							IntFloatHashMap votingGenomes = processTopScores(topScores);							
 							String outcome = read[0];															
 							if(votingGenomes.size() == 1) {
 								System.out.println("Read " + read[0] + " has 1 voting genome");
-								String predictedGenomeId = genomeIds[votingGenomes.getFirst()];
+								String predictedGenomeId = genomeIds[votingGenomes.keySet().intIterator().next()];
 								String[] predictedTaxonIds = completeGenomeId2TaxIds.get(predictedGenomeId);
 								outcome += "\t" + predictedGenomeId;
 								for(String predictedId : predictedTaxonIds) {
@@ -347,22 +348,36 @@ public class MNBC_classify2 {
 								resultQueue.put(outcome);
 							} else {
 								System.out.println("Read " + read[0] + " has " + votingGenomes.size() + " voting genomes");
-								HashMap<String, ArrayList<String>> speciesId2GenomeIds = fillSpeciesId2GenomeIds(votingGenomes);								
-								String dominantSpecies = null; //TO DEAL WITH: Multiple species may have the same greatest number of genomes
+								HashMap<String, MutableIntList> speciesId2Genomes = fillSpeciesId2GenomeIds(votingGenomes);								
+								ArrayList<String> dominantSpecies = new ArrayList<>();
 								int dominantCount = 0;
-								for(Entry<String, ArrayList<String>> species : speciesId2GenomeIds.entrySet()) {
+								for(Entry<String, MutableIntList> species : speciesId2Genomes.entrySet()) {
 									int count = species.getValue().size();
-									if(count >= dominantCount) {
-										dominantSpecies = species.getKey();
+									if(count > dominantCount) {
+										dominantSpecies.clear();										
+										dominantSpecies.add(species.getKey());
 										dominantCount = count;
+									} else if(count == dominantCount) {
+										dominantSpecies.add(species.getKey());
 									}
 								}
-								System.out.println("Dominant species is " + dominantSpecies + " with " + dominantCount + " genomes");
 								
 								outcome += "\tnull";
-								String[] taxonIds = completeGenomeId2TaxIds.get(speciesId2GenomeIds.get(dominantSpecies).get(0));
-								for(String taxonId : taxonIds) {
-									outcome += "\t" + taxonId;
+								if(dominantSpecies.size() == 1) {
+									System.out.println("Dominant species is " + dominantSpecies.get(0) + " with " + dominantCount + " voting genomes");
+																		
+									String[] taxonIds = completeGenomeId2TaxIds.get(genomeIds[speciesId2Genomes.get(dominantSpecies.get(0)).getFirst()]);
+									for(String taxonId : taxonIds) {
+										outcome += "\t" + taxonId;
+									}									
+								} else { //Multiple species may have the same greatest number of genomes
+									String predictedSpecies = getDominantSpeciesWithGreatestAverageScore(dominantSpecies, speciesId2Genomes, votingGenomes);
+									System.out.println(dominantSpecies.size() + " dominant species with " + dominantCount + " voting genomes, " + predictedSpecies + " has greatest average socre");
+									
+									String[] taxonIds = completeGenomeId2TaxIds.get(genomeIds[speciesId2Genomes.get(predictedSpecies).getFirst()]);
+									for(String taxonId : taxonIds) {
+										outcome += "\t" + taxonId;
+									}									
 								}
 								resultQueue.put(outcome);
 							}						
@@ -375,19 +390,47 @@ public class MNBC_classify2 {
 			}
 		}
 		
-		private MutableIntList processTopScores(TreeMap<Float, MutableIntList> topScores) {
-			MutableIntList votingGenomes = new IntArrayList();
-			Entry<Float, MutableIntList> greatestEntry = topScores.pollLastEntry();
-			votingGenomes.addAll(greatestEntry.getValue());
+		private String getDominantSpeciesWithGreatestAverageScore(ArrayList<String> dominantSpecies, HashMap<String, MutableIntList> speciesId2Genomes, IntFloatHashMap votingGenomes) {
+			String result = null;
+			float greatestAverageScore = Float.NEGATIVE_INFINITY;
 			
+			for(String species : dominantSpecies) {
+				float scoreAve = 0.0F;
+				MutableIntList genomes = speciesId2Genomes.get(species);
+				IntIterator it = genomes.intIterator();
+				while(it.hasNext()) {
+					scoreAve += votingGenomes.get(it.next());
+				}
+				scoreAve /= genomes.size();
+				
+				if(scoreAve > greatestAverageScore) {
+					greatestAverageScore = scoreAve;
+					result = species;
+				}
+			}
+			
+			return result;
+		}
+		
+		private IntFloatHashMap processTopScores(TreeMap<Float, MutableIntList> topScores) {
+			IntFloatHashMap votingGenomes = new IntFloatHashMap(); //Key: genome id (index in array genomeIds), Value: score
+			Entry<Float, MutableIntList> greatestEntry = topScores.pollLastEntry();
 			float prevScore = greatestEntry.getKey();
+			IntIterator it = greatestEntry.getValue().intIterator();
+			while(it.hasNext()) {
+				votingGenomes.put(it.next(), prevScore);
+			}
+			
 			while(!topScores.isEmpty()) {
 				Entry<Float, MutableIntList> curEntry = topScores.pollLastEntry();
 				float curScore = curEntry.getKey();
 				if(prevScore - curScore > 10.0F) {
 					break;
 				} else {
-					votingGenomes.addAll(curEntry.getValue());
+					it = curEntry.getValue().intIterator();
+					while(it.hasNext()) {
+						votingGenomes.put(it.next(), curScore);
+					}
 					prevScore = curScore;
 				}
 			}
@@ -395,22 +438,22 @@ public class MNBC_classify2 {
 			return votingGenomes;
 		}
 		
-		private HashMap<String, ArrayList<String>> fillSpeciesId2GenomeIds(MutableIntList votingGenomes) {
-			HashMap<String, ArrayList<String>> speciesId2GenomeIds = new HashMap<>();
-			MutableIntIterator it = votingGenomes.intIterator();
-			while(it.hasNext()) {
-				String genomeId = genomeIds[it.next()];
+		private HashMap<String, MutableIntList> fillSpeciesId2GenomeIds(IntFloatHashMap votingGenomes) {
+			HashMap<String, MutableIntList> speciesId2Genomes = new HashMap<>();
+			for(IntFloatPair entry : votingGenomes.keyValuesView()) {
+				int genome = entry.getOne();
+				String genomeId = genomeIds[genome];
 				String speciesId = completeGenomeId2TaxIds.get(genomeId)[0];
-				if(speciesId2GenomeIds.containsKey(speciesId)) {
-					speciesId2GenomeIds.get(speciesId).add(genomeId);
+				if(speciesId2Genomes.containsKey(speciesId)) {
+					speciesId2Genomes.get(speciesId).add(genome);
 				} else {
-					ArrayList<String> genomeIdsWithSpeciesId = new ArrayList<String>();
-					genomeIdsWithSpeciesId.add(genomeId);
-					speciesId2GenomeIds.put(speciesId, genomeIdsWithSpeciesId);
+					MutableIntList genomesWithSpeciesId = new IntArrayList();
+					genomesWithSpeciesId.add(genome);
+					speciesId2Genomes.put(speciesId, genomesWithSpeciesId);
 				}									
 			}
 			
-			return speciesId2GenomeIds;
+			return speciesId2Genomes;
 		}
 		
 		private int getLCALevelOfPredictedGenomes(int[] genomeIdsWithMaxScoreArray, HashMap<String, String[]> completeGenomeId2TaxIds) {
