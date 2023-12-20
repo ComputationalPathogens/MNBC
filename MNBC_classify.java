@@ -17,6 +17,7 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.GZIPInputStream;
 
 import org.eclipse.collections.api.iterator.IntIterator;
@@ -44,6 +45,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 	private static HashSet<String> finishedReadIds;
 	private static BlockingQueue<String[]> readQueue; //Balance producer and consumers
 	private static BlockingQueue<String> resultQueue; //Balance consumers and writer
+	private static AtomicInteger erroredConsumerCount = new AtomicInteger();
 	
 	public static void main(String[] args) {
 		for(int i = 0; i < args.length; i++) {
@@ -104,22 +106,17 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		
 		ExecutorService nested = Executors.newFixedThreadPool(numberOfCores - 1);
 		CompletionService<String> pool = new ExecutorCompletionService<String>(nested);
-		//System.out.println("Created thread pool");
 		for(int i = 0; i < countFiles.length; i++) {
 			pool.submit(new DBReader(countFiles[i], i));
 		}
-		//System.out.println("Reading DB of size " + countFiles.length);
 		
 		for(int i = 0; i < countFiles.length; i++) {
 			try {
 				String outcome = pool.take().get();
-
 				if(outcome.contains("ERROR")) {
 					System.out.println(i + "th task failed (" + outcome + "), exiting");
 					System.exit(1);
-				} /*else {
-					System.out.println(i + "th task succeeded (" + outcome + ")");
-				}*/
+				}
 			} catch(Exception e) {
 				System.out.println("Exception on " + i + " th returned task, exiting");
 				e.printStackTrace();
@@ -131,10 +128,8 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		System.out.println("Read DB in " + + ((endTime - startTime) / 1000000000) + " seconds");
 		
 		completeGenomeId2TaxIds = readCompleteMeta(metaFilePath);
-		//System.out.println("Read meta file of size" + completeGenomeId2TaxIds.size());
 		
 		new Thread(new Producer()).start();
-		//System.out.println("Started producer thread");
 		
 		for(int i = 0; i < numberOfThreads; i++) {
 			new Thread(new Consumer(i)).start();
@@ -146,18 +141,15 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			PrintWriter writer = null;
 			if(finishedReadIds == null) {
 				writer = new PrintWriter(new FileWriter(outputFilePath), true);
-				writer.println("Read\tGenome\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tSuperkingdom\tMaxScore");
-				//System.out.println("Created result file " + outputFilePath);
+				writer.println("Read\tGenome\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tSuperkingdom");
 			} else {
 				writer = new PrintWriter(new FileWriter(outputFilePath, true), true);
-				//System.out.println("Appending to result file " + outputFilePath);
 			}			
 			
-			while(completedConsumerCounter < numberOfThreads) {
+			while((completedConsumerCounter + erroredConsumerCount.get()) < numberOfThreads) {
 				String outcome = resultQueue.take();
 				if(outcome.endsWith("- finished")) {
 					completedConsumerCounter++;
-					//System.out.println(outcome);
 				} else {
 					writer.println(outcome);
 				}
@@ -180,7 +172,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			String line = reader.readLine();
 			while((line = reader.readLine()) != null) {
 				String[] fields = line.split("\t");
-				if(fields.length == 10) {
+				if(fields.length == 9) {
 					finishedReadIds.add(fields[0]);
 				}
 			}
@@ -204,7 +196,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			}
 			reader.close();
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println("ERROR: failed reading taxonomy file");
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -262,8 +254,9 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 					}
 				}
 			} catch(Exception e) {
-				System.out.println("Consumer " + id + " - error occured on read " + read[0] + ", ending");
+				System.out.println("Consumer " + id + " - error occurred on read " + read[0] + ", ending");
 				e.printStackTrace();
+				erroredConsumerCount.incrementAndGet();
 			}
 		}
 		
@@ -293,7 +286,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			MutableIntList votingGenomes = processTopScores(topScores);							
 			String outcome = read[0];															
 			if(votingGenomes.size() == 1) {
-				System.out.println("Read " + read[0] + " has 1 voting genome");
+				//System.out.println("Read " + read[0] + " has 1 voting genome");
 				String predictedGenomeId = genomeIds[votingGenomes.getFirst()];
 				String[] predictedTaxonIds = completeGenomeId2TaxIds.get(predictedGenomeId);
 				outcome += "\t" + predictedGenomeId;
@@ -301,9 +294,9 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 					outcome += "\t" + predictedId;
 				}								
 			} else {
-				System.out.println("Read " + read[0] + " has " + votingGenomes.size() + " voting genomes");
+				//System.out.println("Read " + read[0] + " has " + votingGenomes.size() + " voting genomes");
 				HashMap<String, ArrayList<String>> speciesId2GenomeIds = fillSpeciesId2GenomeIds(votingGenomes);								
-				String dominantSpecies = null; //TO DEAL WITH: Multiple species may have the same greatest number of genomes
+				String dominantSpecies = null; //Multiple species may have the same greatest number of genomes
 				int dominantCount = 0;
 				for(Entry<String, ArrayList<String>> species : speciesId2GenomeIds.entrySet()) {
 					int count = species.getValue().size();
@@ -312,7 +305,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 						dominantCount = count;
 					}
 				}
-				System.out.println("Dominant species is " + dominantSpecies + " with " + dominantCount + " genomes");
+				//System.out.println("Dominant species is " + dominantSpecies + " with " + dominantCount + " genomes");
 				
 				outcome += "\tnull";
 				String[] taxonIds = completeGenomeId2TaxIds.get(speciesId2GenomeIds.get(dominantSpecies).get(0));
@@ -641,22 +634,22 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			String line = null;
 			if(finishedReadIds == null) {
 				while((line = reader.readLine()) != null) {
-					//line = line.trim();
+					line = line.trim();
 					if(line.startsWith(">") || line.startsWith("@")) {
 						String readId = line.substring(1).split("\\s+")[0];						
-						readQueue.put(new String[] {readId, reader.readLine()/*.trim()*/.toUpperCase()});
+						readQueue.put(new String[] {readId, reader.readLine().trim().toUpperCase()});
 						readCounter++;						
 					}
 				}
 			} else {
 				while((line = reader.readLine()) != null) {
-					//line = line.trim();
+					line = line.trim();
 					if(line.startsWith(">") || line.startsWith("@")) {
 						String readId = line.substring(1).split("\\s+")[0];
 						if(finishedReadIds.contains(readId)) {
 							reader.readLine();						
 						} else {
-							readQueue.put(new String[] {readId, reader.readLine()/*.trim()*/.toUpperCase()});
+							readQueue.put(new String[] {readId, reader.readLine().trim().toUpperCase()});
 							readCounter++;
 						}
 					}
@@ -671,10 +664,10 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			String line = null;
 			if(finishedReadIds == null) {
 				while((line = reader.readLine()) != null) {
-					//line = line.trim();
+					line = line.trim();
 					if(line.startsWith(">") || line.startsWith("@")) {
 						String readId = line.substring(1).split("\\s+")[0];						
-						String readSequence = reader.readLine()/*.trim()*/.toUpperCase();
+						String readSequence = reader.readLine().trim().toUpperCase();
 						reader.readLine();
 						reader.readLine();
 						readQueue.put(new String[] {readId, readSequence});
@@ -683,7 +676,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 				}
 			} else {
 				while((line = reader.readLine()) != null) {
-					//line = line.trim();
+					line = line.trim();
 					if(line.startsWith(">") || line.startsWith("@")) {
 						String readId = line.substring(1).split("\\s+")[0];
 						if(finishedReadIds.contains(readId)) {
@@ -691,7 +684,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 								reader.readLine();
 							}						
 						} else {
-							String readSequence = reader.readLine()/*.trim()*/.toUpperCase();
+							String readSequence = reader.readLine().trim().toUpperCase();
 							reader.readLine();
 							reader.readLine();
 							readQueue.put(new String[] {readId, readSequence});
@@ -710,8 +703,8 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			String line2 = null;
 			if(finishedReadIds == null) {
 				while((line1 = reader1.readLine()) != null) {
-					//line1 = line1.trim();
-					line2 = reader2.readLine()/*.trim()*/;
+					line1 = line1.trim();
+					line2 = reader2.readLine().trim();
 					if(line1.startsWith(">") || line1.startsWith("@")) {
 						if(!line2.startsWith(">") && !line2.startsWith("@")) {
 							System.out.println("Paired-end FASTA format error: " + line1 + " | " + line2);
@@ -724,14 +717,14 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 							System.exit(1);
 						}
 						
-						readQueue.put(new String[] {readId, reader1.readLine()/*.trim()*/.toUpperCase(), reader2.readLine()/*.trim()*/.toUpperCase()});
+						readQueue.put(new String[] {readId, reader1.readLine().trim().toUpperCase(), reader2.readLine().trim().toUpperCase()});
 						readCounter++;						
 					}
 				}
 			} else {
 				while((line1 = reader1.readLine()) != null) {
-					//line1 = line1.trim();
-					line2 = reader2.readLine()/*.trim()*/;
+					line1 = line1.trim();
+					line2 = reader2.readLine().trim();
 					if(line1.startsWith(">") || line1.startsWith("@")) {
 						if(!line2.startsWith(">") && !line2.startsWith("@")) {
 							System.out.println("Paired-end FASTA format error: " + line1 + " | " + line2);
@@ -748,7 +741,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 							reader1.readLine();
 							reader2.readLine();						
 						} else {
-							readQueue.put(new String[] {readId, reader1.readLine()/*.trim()*/.toUpperCase(), reader2.readLine()/*.trim()*/.toUpperCase()});
+							readQueue.put(new String[] {readId, reader1.readLine().trim().toUpperCase(), reader2.readLine().trim().toUpperCase()});
 							readCounter++;
 						}
 					}
@@ -769,8 +762,8 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			String line2 = null;
 			if(finishedReadIds == null) {
 				while((line1 = reader1.readLine()) != null) {
-					//line1 = line1.trim();
-					line2 = reader2.readLine()/*.trim()*/;
+					line1 = line1.trim();
+					line2 = reader2.readLine().trim();
 					if(line1.startsWith(">") || line1.startsWith("@")) {
 						if(!line2.startsWith(">") && !line2.startsWith("@")) {
 							System.out.println("Paired-end FASTQ format error: " + line1 + " | " + line2);
@@ -783,8 +776,8 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 							System.exit(1);
 						}
 						
-						String startSeq = reader1.readLine()/*.trim()*/.toUpperCase();
-						String endSeq = reader2.readLine()/*.trim()*/.toUpperCase();					
+						String startSeq = reader1.readLine().trim().toUpperCase();
+						String endSeq = reader2.readLine().trim().toUpperCase();					
 						reader1.readLine();
 						reader1.readLine();
 						reader2.readLine();
@@ -796,8 +789,8 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 				}
 			} else {
 				while((line1 = reader1.readLine()) != null) {
-					//line1 = line1.trim();
-					line2 = reader2.readLine()/*.trim()*/;
+					line1 = line1.trim();
+					line2 = reader2.readLine().trim();
 					if(line1.startsWith(">") || line1.startsWith("@")) {
 						if(!line2.startsWith(">") && !line2.startsWith("@")) {
 							System.out.println("Paired-end FASTQ format error: " + line1 + " | " + line2);
@@ -816,8 +809,8 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 								reader2.readLine();
 							}
 						} else {
-							String startSeq = reader1.readLine()/*.trim()*/.toUpperCase();
-							String endSeq = reader2.readLine()/*.trim()*/.toUpperCase();					
+							String startSeq = reader1.readLine().trim().toUpperCase();
+							String endSeq = reader2.readLine().trim().toUpperCase();					
 							reader1.readLine();
 							reader1.readLine();
 							reader2.readLine();
@@ -865,14 +858,6 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 					genomeMinimizers[id].add(Integer.parseInt(line));
 				}
 				reader.close();
-				
-				/*String content = Files.readString(countFile.toPath());
-				String[] lines = content.split("\\s+");
-				logFres[id] = (float) Math.log(1.0 / Integer.parseInt(lines[0]));
-				genomeMinimizers[id] = new IntHashSet();
-				for(int i = 1; i < lines.length; i++) {
-					genomeMinimizers[id].add(Integer.parseInt(lines[i]));
-				}*/
 			} catch(Exception e) {
 				e.printStackTrace();
 				return "ERROR: couldn't read " + filename;
