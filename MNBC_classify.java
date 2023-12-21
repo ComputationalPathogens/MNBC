@@ -31,6 +31,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 	private static int k;
 	private static int numberOfThreads;
 	private static float kmerPenalty = -2000.0F;
+	private static float delta = 1000.0F;
 	private static String dbDirPath;
 	private static String metaFilePath; //Example filename: refSeq_prokaryote_complete_genomes_ok_status_metainfo_300k.txt
 	private static String outputFilePath;
@@ -56,6 +57,9 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 						break;
 					case 'p':
 						kmerPenalty = Float.parseFloat(args[i + 1]);
+						break;
+					case 'e':
+						delta = Float.parseFloat(args[i + 1]);
 						break;
 					case 'c':
 						numberOfThreads = Integer.parseInt(args[i + 1]);
@@ -325,7 +329,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			while(!topScores.isEmpty()) {
 				Entry<Float, MutableIntList> curEntry = topScores.pollLastEntry();
 				float curScore = curEntry.getKey();
-				if(prevScore - curScore > 1000.0F) {
+				if(prevScore - curScore > delta) {
 					break;
 				} else {
 					votingGenomes.addAll(curEntry.getValue());
