@@ -61,7 +61,7 @@ public class MNBC_taxonomy {
 			String[] taxidAndName = refseqAssemblyID2Taxid.get(assemblyID);
 			if(taxidAndName == null) {
 				System.out.println("ERROR: couldn't find the assembly ID " + assemblyID + " in the assembly summary file! Exiting");
-				System.exit(1);;
+				continue;
 			}			
 			
 			ranks[0] = taxidAndName[0];
@@ -152,17 +152,18 @@ public class MNBC_taxonomy {
 	private static HashMap<String, String[]> readRefseqAssemblySummary(String refseqAssemblySummaryPath) {
 		HashMap<String, String[]> refseqAssemblyID2Taxid = new HashMap<String, String[]>(); //String[0]: indicating if taxid is at species level (1) or strain level (0), String[1]: species or strain taxid, String[2]: organism name
 		
+		String line = null;
 		try {			
 			BufferedReader reader = new BufferedReader(new FileReader(refseqAssemblySummaryPath));
-			String line = reader.readLine();
-			line = reader.readLine();
+			reader.readLine();
+			reader.readLine();
 			while((line = reader.readLine()) != null) {
 				String[] fields = line.split("\t");				
 				refseqAssemblyID2Taxid.put(fields[0], new String[] {fields[6], fields[7] + " " + fields[8]});							
 			}
 			reader.close();
 		} catch(Exception e) {
-			System.out.println("Error in reading assembly summary file: " + refseqAssemblySummaryPath);
+			System.out.println("Error in reading assembly summary file: " + line);
 			e.printStackTrace();
 			System.exit(1);
 		}
