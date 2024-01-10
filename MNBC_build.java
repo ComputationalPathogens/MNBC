@@ -185,7 +185,8 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 					StringBuilder minusSequence = new StringBuilder();
 					int length = chromosome.length();
 					for(int i = length - 1; i >= 0; i--) {
-						switch(chromosome.charAt(i)) {
+						char base = chromosome.charAt(i);
+						switch(base) {
 							case 'A':
 								minusSequence.append('T');
 								break;
@@ -199,6 +200,7 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 								minusSequence.append('A');
 								break;
 							default:
+								minusSequence.append(base);
 								for(int j = i - k + 1; j <= i; j++) {
 									indicesOfInvalidKmers.add(j);
 								}

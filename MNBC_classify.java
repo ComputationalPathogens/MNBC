@@ -368,7 +368,8 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			MutableIntSet indicesOfInvalidKmers = new IntHashSet();
 			StringBuilder minusSequence = new StringBuilder();			
 			for(int i = length - 1; i >= 0; i--) {
-				switch(testFrag.charAt(i)) {
+				char base = testFrag.charAt(i);
+				switch(base) {
 					case 'A':
 						minusSequence.append('T');
 						break;
@@ -382,6 +383,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 						minusSequence.append('A');
 						break;
 					default:
+						minusSequence.append(base);
 						for(int j = i - k + 1; j <= i; j++) {
 							indicesOfInvalidKmers.add(j);
 						}
