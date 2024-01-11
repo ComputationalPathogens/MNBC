@@ -31,7 +31,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 	private static int k;
 	private static int numberOfThreads;
 	private static float kmerPenalty = -2000.0F;
-	private static float delta = 1000.0F;
+	private static float delta = 1500.0F;
 	private static String dbDirPath;
 	private static String metaFilePath; //Example filename: refSeq_prokaryote_complete_genomes_ok_status_metainfo_300k.txt
 	private static String outputFilePath;
@@ -883,5 +883,6 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		System.out.println("-o:	Output classification file");
 		System.out.println("-t:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.");
 		System.out.println("-p (optional): Penalty for non-existent k-mers (default -2000)");
+		System.out.println("-e (optional): Threshold on the difference between adjacent scores (default 1500)");
 	}
 }
