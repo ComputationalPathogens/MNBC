@@ -60,7 +60,7 @@ public class MNBC_taxonomy {
 			//System.out.println("assemblyID " + assemblyID);
 			String[] taxidAndName = refseqAssemblyID2Taxid.get(assemblyID);
 			if(taxidAndName == null) {
-				System.out.println("ERROR: couldn't find the assembly ID " + assemblyID + " in the assembly summary file! Exiting");
+				System.out.println("ERROR: couldn't find the assembly ID " + assemblyID + " in the assembly summary file!");
 				continue;
 			}			
 			
