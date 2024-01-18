@@ -145,7 +145,7 @@ public class MNBC_taxonomy {
 			System.exit(1);
 		}
 		
-		System.out.println("Finished reading nodes.dmp file : " + nodeDmpPath);
+		System.out.println("Finished reading nodes.dmp file: " + nodeDmpPath);
 		return taxid2ParentTaxid;
 	}
 	
@@ -168,7 +168,7 @@ public class MNBC_taxonomy {
 			System.exit(1);
 		}
 		
-		System.out.println("Finished reading assembly summary file : " + refseqAssemblySummaryPath);
+		System.out.println("Finished reading assembly summary file: " + refseqAssemblySummaryPath);
 		return refseqAssemblyID2Taxid;
 	}
 	
@@ -186,7 +186,7 @@ public class MNBC_taxonomy {
 	}
 	
 	private static void printHelpInfo() {
-		System.out.println("This MNBC_taxonomy tool (v1.0) finds taxonomy information for reference sequences in a database.");
+		System.out.println("This MNBC_taxonomy tool (v1.0) generates the taxonomy file for a reference database.");
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))");
 		System.out.println("-n:	Taxonomy nodes.dmp file downoaded from NCBI (e.g. taxdmp.zip from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)");		
