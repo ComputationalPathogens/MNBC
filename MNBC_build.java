@@ -175,8 +175,11 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 			
 			try {
 				ArrayList<StringBuilder> chromosomes = readGenomeFile(referenceGenome);
-				System.out.println("Task " + id + " - read " + chromosomes.size() + " chromosomes");
+				if(chromosomes.isEmpty()) {
+					return "Task " + id + " - Finished the genome count file(whole_genome_filtered_out_by_length) " + filename;
+				}
 				
+				System.out.println("Task " + id + " - read " + chromosomes.size() + " chromosomes");				
 				for(int m = 0; m < chromosomes.size(); m++) {
 					System.out.println("Task " + id + " - start processing " + m + "th chromosome...");
 					StringBuilder chromosome = chromosomes.get(m);
@@ -401,6 +404,7 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 					}
 				} else {
 					if(retain) {
+						line = line.trim();
 						chromosomeLength += line.length();
 						chromosome = chromosome.append(line.toUpperCase());
 						continue;
