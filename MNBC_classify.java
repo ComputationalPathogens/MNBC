@@ -734,50 +734,80 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		private void readTestFragFastaFiles(BufferedReader reader1, BufferedReader reader2) throws Exception {		
 			String line1 = null;
 			String line2 = null;
+			String readId = null;
+			StringBuilder start = new StringBuilder();
+			StringBuilder end = new StringBuilder();
+			
 			if(finishedReadIds == null) {
 				while((line1 = reader1.readLine()) != null) {
 					line1 = line1.trim();
 					line2 = reader2.readLine().trim();
 					if(line1.startsWith(">") || line1.startsWith("@")) {
+						if(!start.isEmpty()) {
+							readQueue.put(new String[] {readId, start.toString().toUpperCase(), end.toString().toUpperCase()});
+							readCounter++;
+						}
+						
 						if(!line2.startsWith(">") && !line2.startsWith("@")) {
 							System.out.println("Paired-end FASTA format error: " + line1 + " | " + line2);
 							System.exit(1);
-						}
+						}						
 
-						String readId = line1.substring(1).split("\\s+")[0];
+						readId = line1.substring(1).split("\\s+")[0];
 						if(!readId.equals(line2.substring(1).split("\\s+")[0])) {
 							System.out.println("Paired-end FASTA format error: " + line1 + " | " + line2);
 							System.exit(1);
 						}
-						
-						readQueue.put(new String[] {readId, reader1.readLine().trim().toUpperCase(), reader2.readLine().trim().toUpperCase()});
-						readCounter++;						
+						start.setLength(0);
+						end.setLength(0);				
+					} else {
+						start.append(line1);
+						end.append(line2);
 					}
 				}
+				if(!start.isEmpty()) {
+					readQueue.put(new String[] {readId, start.toString().toUpperCase(), end.toString().toUpperCase()});
+					readCounter++;
+				}
 			} else {
+				boolean skip = false;
 				while((line1 = reader1.readLine()) != null) {
 					line1 = line1.trim();
 					line2 = reader2.readLine().trim();
 					if(line1.startsWith(">") || line1.startsWith("@")) {
+						if(!start.isEmpty()) {
+							readQueue.put(new String[] {readId, start.toString().toUpperCase(), end.toString().toUpperCase()});
+							readCounter++;
+						}
+						
 						if(!line2.startsWith(">") && !line2.startsWith("@")) {
 							System.out.println("Paired-end FASTA format error: " + line1 + " | " + line2);
 							System.exit(1);
-						}
+						}						
 
-						String readId = line1.substring(1).split("\\s+")[0];
+						readId = line1.substring(1).split("\\s+")[0];
 						if(!readId.equals(line2.substring(1).split("\\s+")[0])) {
 							System.out.println("Paired-end FASTA format error: " + line1 + " | " + line2);
 							System.exit(1);
 						}
+						start.setLength(0);
+						end.setLength(0);
 
 						if(finishedReadIds.contains(readId)) {
-							reader1.readLine();
-							reader2.readLine();						
+							skip = true;			
 						} else {
-							readQueue.put(new String[] {readId, reader1.readLine().trim().toUpperCase(), reader2.readLine().trim().toUpperCase()});
-							readCounter++;
+							skip = false;
+						}
+					} else {
+						if(!skip) {
+							start.append(line1);
+							end.append(line2);
 						}
 					}
+				}
+				if(!start.isEmpty()) {
+					readQueue.put(new String[] {readId, start.toString().toUpperCase(), end.toString().toUpperCase()});
+					readCounter++;
 				}
 			}
 			if(reader2.readLine() != null) {
