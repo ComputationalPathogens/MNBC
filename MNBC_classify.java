@@ -638,27 +638,54 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		
 		private void readTestFragFastaFile(BufferedReader reader) throws Exception {
 			String line = null;
+			String readId = null;
+			StringBuilder sequence = new StringBuilder();
+			
 			if(finishedReadIds == null) {
 				while((line = reader.readLine()) != null) {
 					line = line.trim();
-					if(line.startsWith(">") || line.startsWith("@")) {
-						String readId = line.substring(1).split("\\s+")[0];						
-						readQueue.put(new String[] {readId, reader.readLine().trim().toUpperCase()});
-						readCounter++;						
+					if(line.startsWith(">") || line.startsWith("@")) {						
+						if(!sequence.isEmpty()) {
+							readQueue.put(new String[] {readId, sequence.toString().toUpperCase()});
+							readCounter++;
+						}
+						
+						readId = line.substring(1).split("\\s+")[0];
+						sequence.setLength(0);
+					} else {
+						sequence.append(line);
 					}
+				}				
+				if(!sequence.isEmpty()) {
+					readQueue.put(new String[] {readId, sequence.toString().toUpperCase()});
+					readCounter++;
 				}
 			} else {
+				boolean skip = false;
 				while((line = reader.readLine()) != null) {
 					line = line.trim();
 					if(line.startsWith(">") || line.startsWith("@")) {
-						String readId = line.substring(1).split("\\s+")[0];
-						if(finishedReadIds.contains(readId)) {
-							reader.readLine();						
-						} else {
-							readQueue.put(new String[] {readId, reader.readLine().trim().toUpperCase()});
+						if(!sequence.isEmpty()) {
+							readQueue.put(new String[] {readId, sequence.toString().toUpperCase()});
 							readCounter++;
 						}
+						
+						readId = line.substring(1).split("\\s+")[0];
+						sequence.setLength(0);
+						if(finishedReadIds.contains(readId)) {
+							skip = true;						
+						} else {
+							skip = false;
+						}
+					} else {
+						if(!skip) {
+							sequence.append(line);
+						}						
 					}
+				}
+				if(!sequence.isEmpty()) {
+					readQueue.put(new String[] {readId, sequence.toString().toUpperCase()});
+					readCounter++;
 				}
 			}			
 			
