@@ -29,7 +29,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 -c:	Number of threads  
 -i:	Input directory containing the (gzipped) files of reference sequences (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
 -o: Existing output database directory  
--f (optional): Filtering threshold on the sequence length (an integer >= 0). Chromosomes with lengths below this threshold are ignored as well as all plasmids. The default value is 0 (i.e. all chromosomes are retained)  
+-f (optional): Filtering threshold on the sequence length (an integer >= 0). Chromosomes with lengths below this threshold are ignored as well as all plasmids. The default value is 0 (i.e. all chromosomes are retained).  
 -b (optional): Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.
 
 3. Run MNBC_classify with the following command to classify the reads against the database:  

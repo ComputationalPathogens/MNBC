@@ -127,9 +127,9 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-k:	K-mer length");
 		System.out.println("-c:	Number of threads");		
-		System.out.println("-i:	Input directory containing the (gzipped) files of reference sequences (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome file downloaded from RefSeq)");
+		System.out.println("-i:	Input directory containing the (gzipped) files of reference sequences (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)");
 		System.out.println("-o:	Exiting output database directory");
-		System.out.println("-f (optional): Minimum filtering threshold on the sequence length (an integer not smaller than 0, the default value is 0). Sequences with lengths below this threshold and all plasmids are ignored.");
+		System.out.println("-f (optional): Filtering threshold on the sequence length (an integer >= 0). Chromosomes with lengths below this threshold are ignored as well as all plasmids. The default value is 0 (i.e. all chromosomes are retained).");
 		System.out.println("-b (optional): Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.");
 	}
 	
