@@ -1,6 +1,6 @@
 # MNBC
 
-The MNBC (Minimizer-based Naive Bayes Classifier) read binner
+The MNBC (multithreaded minimizer-based Naive Bayes classifier) read binner
 
 *********************************************************************************************************  
 <b>Prerequisites:</b>  
@@ -11,15 +11,15 @@ The MNBC (Minimizer-based Naive Bayes Classifier) read binner
 The 'example' folder includes a demo, which is described below to demonstrate how to use the binner:
 
 <b>Problem description:</b>  
-The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain. From the result file 'result.txt', it can be seen that all the ten reads were correctly classified.
+The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain. From the result file 'result.txt', it can be seen that all ten reads were correctly classified.
 
 <b>Tool usage:</b>  
-1. Run MNBC_taxonomy with the following command to generate the taxonomic file of the reference database:  
+1. Run MNBC_taxonomy with the following command to generate the taxonomy file of the reference database:  
 <b>java -cp MNBC.jar -Xmx1G MNBC_taxonomy -i RefSeq_genomes/ -a assembly_summary_refseq.txt -n taxdmp/nodes.dmp -o taxonomy.txt</b>  
 (The following help menu displays by using '-h')  
 -a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))  
 -n:	Taxonomy nodes.dmp file downoaded from NCBI (e.g. taxdmp.zip from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)  
--i:	Input directory containing the (gzipped) files of reference sequences in the database (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome file downloaded from RefSeq)  
+-i:	Input directory containing the (gzipped) files of reference sequences in the database (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
 -o:	Output taxonomy file for the database
 
 2. Run MNBC_build with the following command to build the database:  
@@ -27,9 +27,9 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 (The following help menu displays by using '-h')  
 -k:	K-mer length  
 -c:	Number of threads  
--i:	Input directory containing the (gzipped) files of reference sequences (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome file downloaded from RefSeq)  
--o: Existing Output database directory  
--f (optional): Minimum filtering threshold on the sequence length (an integer not smaller than 0, the default value is 0). Sequences with lengths below this threshold and all plasmids are ignored.  
+-i:	Input directory containing the (gzipped) files of reference sequences (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
+-o: Existing output database directory  
+-f (optional): Filtering threshold on the sequence length (an integer >= 0). Chromosomes with lengths below this threshold are ignored as well as all plasmids. The default value is 0 (i.e. all chromosomes are retained)  
 -b (optional): Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.
 
 3. Run MNBC_classify with the following command to classify the reads against the database:  
@@ -41,5 +41,5 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 -m:	Input taxonomy file  
 -o:	Output classification file  
 -t:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.  
--p (optional): Penalty for non-existent k-mers (default -2000)  
+-p (optional): Penalty for absent minimizers (default -2000)  
 -e (optional): Threshold on the difference between adjacent scores (default 1500)
