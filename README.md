@@ -1,6 +1,6 @@
 # MNBC
 
-The MNBC (multithreaded minimizer-based Naive Bayes classifier) read binner
+The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 
 *********************************************************************************************************  
 <b>Prerequisites:</b>  
@@ -8,7 +8,7 @@ The MNBC (multithreaded minimizer-based Naive Bayes classifier) read binner
 2. Please download MNBC.jar, eclipse-collections-11.1.0.jar and eclipse-collections-api-11.1.0.jar from this repository  
 *********************************************************************************************************  
 
-The 'example' folder includes a demo, which is described below to demonstrate how to use the binner:
+The 'example' folder includes a demo, which is described below to demonstrate how to use the tool:
 
 <b>Problem description:</b>  
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain. From the result file 'result.txt', it can be seen that all ten reads were correctly classified.
