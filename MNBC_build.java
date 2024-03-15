@@ -1,3 +1,9 @@
+/**
+ * 
+ * @author Ruipeng Lu
+ * 
+ */
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,8 +38,13 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 	private static String outputDirPath;
 	private static String previousProgressPath;	
 	
-	public static void main(String[] args) {
-		for(int i = 0; i < args.length; i++) {
+	public static void execute(String[] args) {
+		if(args.length == 1) {
+			printHelpInfo();
+			System.exit(0);
+		}
+		
+		for(int i = 1; i < args.length; i++) {
 			if(args[i].startsWith("-")) {
 				switch(args[i].charAt(1)) {
 					case 'k':
@@ -59,6 +70,11 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 						System.exit(0);
 				}
 			}
+		}
+		
+		if((k == 0) || (numberOfThreads == 0) || (referenceGenomeDirPath == null) || (outputDirPath == null)) {
+			System.out.println("Error: not all required parameters are set -- Run 'MNBC build -h' for help");
+			System.exit(0);
 		}
 		
 		long startTime = System.nanoTime();

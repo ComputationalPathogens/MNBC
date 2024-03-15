@@ -1,3 +1,9 @@
+/**
+ *
+ * @author Ruipeng Lu
+ * 
+ */
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,8 +17,13 @@ public class MNBC_taxonomy {
 	public static String nodeDmpPath; //Example filename: nodes.dmp
 	public static String outputPath; //Example filename: refSeq_prokaryote_complete_genomes_ok_status_metainfo.txt
 	
-	public static void main(String[] args) {
-		for(int i = 0; i < args.length; i++) {
+	public static void execute(String[] args) {
+		if(args.length == 1) {
+			printHelpInfo();
+			System.exit(0);
+		}
+		
+		for(int i = 1; i < args.length; i++) {
 			if(args[i].startsWith("-")) {
 				switch(args[i].charAt(1)) {
 					case 'a':
@@ -32,6 +43,11 @@ public class MNBC_taxonomy {
 						System.exit(0);
 				}
 			}
+		}
+		
+		if((genomeDirPath == null) || (refseqAssemblySummaryPath == null) || (nodeDmpPath == null) || (outputPath == null)) {
+			System.out.println("Error: not all required parameters are set -- Run 'MNBC taxonomy -h' for help");
+			System.exit(0);
 		}
 		
 		ArrayList<String> refseqAssemblyIDs = readAssemlyIds(genomeDirPath);

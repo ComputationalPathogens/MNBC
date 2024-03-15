@@ -1,3 +1,9 @@
+/**
+ * 
+ * @author Ruipeng Lu
+ * 
+ */
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,8 +54,13 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 	private static BlockingQueue<String> resultQueue; //Balance consumers and writer
 	private static AtomicInteger erroredConsumerCount = new AtomicInteger();
 	
-	public static void main(String[] args) {
-		for(int i = 0; i < args.length; i++) {
+	public static void execute(String[] args) {
+		if(args.length == 1) {
+			printHelpInfo();
+			System.exit(0);
+		}
+		
+		for(int i = 1; i < args.length; i++) {
 			if(args[i].startsWith("-")) {
 				switch(args[i].charAt(1)) {
 					case 'k':
@@ -85,6 +96,15 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 						System.exit(0);
 				}
 			}
+		}
+		
+		if((k == 0) || (numberOfThreads == 0) || (dbDirPath == null) || (metaFilePath == null) || (outputFilePath == null) || (startPath == null)) {
+			System.out.println("Error: not all required parameters are set -- Run 'MNBC classify -h' for help");
+			System.exit(0);
+		}
+		if(readType && (endPath == null)) {
+			System.out.println("Error: End sequence file of the paired-end reads is not set -- Run 'MNBC classify -h' for help");
+			System.exit(0);
 		}
 		
 		long startTime = System.nanoTime();		
