@@ -102,10 +102,6 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			System.out.println("Error: not all required parameters are set -- Run 'MNBC classify -h' for help");
 			System.exit(0);
 		}
-		if(readType && (endPath == null)) {
-			System.out.println("Error: End sequence file of the paired-end reads is not set -- Run 'MNBC classify -h' for help");
-			System.exit(0);
-		}
 		
 		long startTime = System.nanoTime();		
 		int numberOfCores = Runtime.getRuntime().availableProcessors();
