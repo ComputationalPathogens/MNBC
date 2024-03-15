@@ -5,7 +5,7 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 *********************************************************************************************************  
 <b>Prerequisites:</b>  
 1. Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads  
-2. Please download MNBC.jar, eclipse-collections-11.1.0.jar and eclipse-collections-api-11.1.0.jar from this repository  
+2. Please download MNBC.jar from this repository  
 *********************************************************************************************************  
 
 The 'example' folder includes a demo, which is described below to demonstrate how to use the tool:
@@ -14,16 +14,16 @@ The 'example' folder includes a demo, which is described below to demonstrate ho
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain. From the result file 'result.txt', it can be seen that all ten reads were correctly classified.
 
 <b>Tool usage:</b>  
-1. Run MNBC_taxonomy with the following command to generate the taxonomy file of the reference database:  
-<b>java -cp MNBC.jar -Xmx1G MNBC_taxonomy -i RefSeq_genomes/ -a assembly_summary_refseq.txt -n taxdmp/nodes.dmp -o taxonomy.txt</b>  
+1. Run the following command to generate the taxonomy file of the reference database:  
+<b>java -cp MNBC.jar -Xmx1G MNBC taxonomy -i RefSeq_genomes/ -a assembly_summary_refseq.txt -n taxdmp/nodes.dmp -o taxonomy.txt</b>  
 (The following help menu displays by using '-h')  
 -a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))  
 -n:	Taxonomy nodes.dmp file downoaded from NCBI (e.g. taxdmp.zip from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)  
 -i:	Input directory containing the (gzipped) files of reference sequences in the database (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
 -o:	Output taxonomy file for the database
 
-2. Run MNBC_build with the following command to build the database:  
-<b>java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.jar -Xmx1G MNBC_build -k 15 -c 2 -f 300000 -i RefSeq_genomes/ -o db/</b>  
+2. Run the following command to build the database:  
+<b>java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i RefSeq_genomes/ -o db/</b>  
 (The following help menu displays by using '-h')  
 -k:	K-mer length  
 -c:	Number of threads  
@@ -32,8 +32,8 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 -f (optional): Filtering threshold on the sequence length (an integer >= 0). Chromosomes with lengths below this threshold are ignored as well as all plasmids. The default value is 0 (i.e. all chromosomes are retained).  
 -b (optional): Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.
 
-3. Run MNBC_classify with the following command to classify the reads against the database:  
-<b>java -cp MNBC.jar:eclipse-collections-api-11.1.0.jar:eclipse-collections-11.1.0.jar -Xmx1G MNBC_classify -k 15 -c 2 -d db/ -m taxonomy.txt -o result.txt -t 1 reads.fasta</b>  
+3. Run the following command to classify the reads against the database:  
+<b>java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d db/ -m taxonomy.txt -o result.txt -t 1 reads.fasta</b>  
 (The following help menu displays by using '-h')  
 -k: K-mer length  
 -c: Number of threads  
