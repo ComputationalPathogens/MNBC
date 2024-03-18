@@ -14,7 +14,8 @@ The 'example' folder includes a small demo, which is described below to demonstr
 <b>Problem description:</b>  
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain. From the result file 'result.txt', it can be seen that all ten reads were correctly classified.
 
-<b>Tool usage:</b> (Please change the following path '/home/jdk-17.0.10/bin/java' accordingly if the folder 'jdk-17.0.10' is in another different directory)  
+<b>Tool usage:</b>  
+(Please change the following path '/home/jdk-17.0.10/bin/java' accordingly if the folder 'jdk-17.0.10' is in another different directory)  
 1. Run the following command in a terminal window to generate the taxonomy file of the reference database:  
 <b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i RefSeq_genomes/ -a assembly_summary_refseq.txt -n taxdmp/nodes.dmp -o taxonomy.txt</b>  
 (The following help menu displays by using '-h')  
