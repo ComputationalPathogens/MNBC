@@ -9,7 +9,7 @@ For the Linux operating system, download the 'jdk-17_linux-x64_bin.tar.gz' file 
 2. Please download MNBC.jar and the example folder from this repository  
 *********************************************************************************************************  
 
-The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool on the test data. All input files used in this demo and output files produced in the following 3 steps are included in this folder, so the 3 commands can be directly run in a terminal window.  
+The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used in this demo and output files produced in the following 3 steps are included in this folder, so the 3 commands can be directly run in a terminal window.  
 
 <b>Problem description:</b>  
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database (i.e. the 'RefSeq_genomes' folder) contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
