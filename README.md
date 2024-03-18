@@ -9,7 +9,7 @@ For example, for the Linux operating system, download the 'jdk-17_linux-x64_bin.
 2. Please download MNBC.jar and the example folder from this repository  
 *********************************************************************************************************  
 
-The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used in this demo and output files produced by the following commands are included in the folder.  
+The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used in this demo and output files produced by the following commands are included in this folder, so the following three commands can be directly run).  
 
 <b>Problem description:</b>  
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain. From the result file 'result.txt', it can be seen that all ten reads were correctly classified.
@@ -19,7 +19,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 1. Run the following command in a terminal window to generate the taxonomy file of the reference database:  
 <b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i RefSeq_genomes/ -a assembly_summary_refseq.txt -n taxdmp/nodes.dmp -o taxonomy.txt</b>  
 (The following help menu displays by using '-h')  
--a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))  
+-a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt downloaded from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))  
 -n:	Taxonomy nodes.dmp file downoaded from NCBI (Please decompress the file 'taxdmp.zip', then the folder 'taxdmp' appears. The file 'taxdmp.zip' is downloaded from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)  
 -i:	Input directory containing the (gzipped) files of reference sequences in the database (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
 -o:	Output taxonomy file for the database
