@@ -47,7 +47,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 -e (optional): Threshold on the difference between adjacent scores (default 1500)
 
 <b>Format of final classification file:</b>  
-In the final classification file 'result.txt' produced by the last command, the first row contains column headers, and each subsequent row gives the classification for a read.  
+In the final tab-delimited classification file 'result.txt' produced by the last command, the 1st row contains column headers, and each subsequent row gives the classification for a read.  
 
 Read	Genome	Species	Genus	Family	Order	Class	Phylum	Superkingdom  
 SRR227300.1.1	GCF_022869985.1	562	561	543	91347	1236	1224	2  
