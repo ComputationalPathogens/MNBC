@@ -17,6 +17,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 <b>Tool usage (3 steps):</b>  
 (Please first open a terminal window, and change to the directory containing the 'MNBC.jar' file by using the 'cd' command)  
 (Please change the path '/home/jdk-17.0.10/bin/java' accordingly if the folder 'jdk-17.0.10' is in another directory other than '/home')  
+(Alternatively, add this line "export PATH=/home/jdk-17.0.10/bin/java:${PATH}" to the end of the hidden '.bashrc' file in your home directory, then the following 3 commands can be be simplified to <b>java -cp MNBC.jar ...</b>)  
 1. Run the following command in a terminal window to generate the taxonomy file of the reference database:  
 <b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i RefSeq_genomes/ -a assembly_summary_refseq.txt -n taxdmp/nodes.dmp -o taxonomy.txt</b>  
 (The following help menu displays by using '-h')  
