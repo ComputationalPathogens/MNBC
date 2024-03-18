@@ -62,4 +62,4 @@ SRR032501.3.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2
 SRR032501.4.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
 SRR032501.5.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
 
-The 1st column is the read ID, the 2nd column is the genome ID assigned to the read, and the next 7 columns are the assigned taxon ID numbers from the species level to the domain level. It can be seen that all 10 reads were assigned the correct genome IDs and species taxon IDs.
+The 1st column is the read ID, the 2nd column is the genome ID assigned to the read, and the next 7 columns are the assigned taxon ID numbers from the species level to the domain level. It can be seen that all 10 reads were assigned the correct genome IDs and species taxon IDs (i.e. E. coli -- 562, Yersinia rohdei -- 29485).
