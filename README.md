@@ -8,7 +8,7 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 2. Please download MNBC.jar and the example folder from this repository  
 *********************************************************************************************************  
 
-The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used and output files produced in this demo are included in the folder.  
+The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used in this demo and output files produced by the following commands are included in the folder.  
 
 <b>Problem description:</b>  
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain. From the result file 'result.txt', it can be seen that all ten reads were correctly classified.
