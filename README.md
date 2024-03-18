@@ -48,6 +48,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 
 <b>Format of final classification file:</b>  
 In the final classification file 'result.txt' produced by the last command, the first row contains column headers, and each subsequent row gives the classification for a read.  
+
 Read	Genome	Species	Genus	Family	Order	Class	Phylum	Superkingdom  
 SRR227300.1.1	GCF_022869985.1	562	561	543	91347	1236	1224	2  
 SRR227300.2.1	GCF_022869985.1	562	561	543	91347	1236	1224	2  
@@ -59,4 +60,5 @@ SRR032501.1.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2
 SRR032501.3.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
 SRR032501.4.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
 SRR032501.5.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
+
 The 1st column is the read ID, the 2nd column is the genome ID assigned to the read, and the next 7 columns are the assigned taxon IDs from the species level to the genus level. It can be seen that all ten reads were assigned the correct genome IDs and species taxon IDs.
