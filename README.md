@@ -20,7 +20,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 <b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i RefSeq_genomes/ -a assembly_summary_refseq.txt -n taxdmp/nodes.dmp -o taxonomy.txt</b>  
 (The following help menu displays by using '-h')  
 -a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))  
--n:	Taxonomy nodes.dmp file downoaded from NCBI (please decompress the file 'taxdmp.zip', then the folder 'taxdmp' appears. The file 'taxdmp.zip' is downloaded from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)  
+-n:	Taxonomy nodes.dmp file downoaded from NCBI (Please decompress the file 'taxdmp.zip', then the folder 'taxdmp' appears. The file 'taxdmp.zip' is downloaded from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)  
 -i:	Input directory containing the (gzipped) files of reference sequences in the database (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
 -o:	Output taxonomy file for the database
 
