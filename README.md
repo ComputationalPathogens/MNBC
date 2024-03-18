@@ -12,7 +12,7 @@ For example, for the Linux operating system, download the 'jdk-17_linux-x64_bin.
 The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used in this demo and output files produced by the following commands are included in this folder, so the commands can be directly run in a terminal window.  
 
 <b>Problem description:</b>  
-The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain. From the result file 'result.txt', it can be seen that all ten reads were correctly classified.
+The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database (i.e. the 'RefSeq_genomes' folder) contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
 
 <b>Tool usage:</b>  
 (Please change the following path '/home/jdk-17.0.10/bin/java' accordingly if the folder 'jdk-17.0.10' is in another directory other than '/home')  
@@ -45,3 +45,5 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 -t:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.  
 -p (optional): Penalty for absent minimizers (default -2000)  
 -e (optional): Threshold on the difference between adjacent scores (default 1500)
+
+In the final classification file 'result.txt' produced by the previous command, the first row contains column headers, and each subsequent row gives the classification for a read. The 1st column is the read ID, the 2nd column is the genome ID assigned to the read, and the next 7 columns are the assigned taxon IDs from the species level to the genus level. It can be seen that all ten reads were assigned the correct genome IDs and species taxon IDs.
