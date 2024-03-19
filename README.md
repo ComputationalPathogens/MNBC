@@ -6,7 +6,7 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 <b>Prerequisites:</b>  
 1. Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads.  
 For the Linux operating system, download the 'jdk-17_linux-x64_bin.tar.gz' file (https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz) （for example, to the '/home' directory), and decompress it with the command <b>"tar -xzvf jdk-17_linux-x64_bin.tar.gz"</b>. Then a new folder 'jdk-17.0.10' appears in the '/home' directory.  
-2. Please download this repository using the command <b>"git clone https://github.com/ComputationalPathogens/MNBC"</b>  
+2. Please download this repository using the command <b>"git clone https://github.com/ComputationalPathogens/MNBC"</b>, then a new folder 'MNBC' appears.  
 *********************************************************************************************************  
 
 The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used in this demo and output files produced in the following 3 steps are included in this folder, so the 3 commands can be directly run in a terminal window.  
@@ -15,7 +15,7 @@ The 'example' folder includes a small demo, which is described below to demonstr
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database (i.e. the 'RefSeq_genomes' folder) contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
 
 <b>Tool usage (3 steps):</b>  
-(Please first open a terminal window, and change to the directory containing the 'MNBC.jar' file by using the 'cd' command)  
+(Please first open a terminal window, and change to the folder 'MNBC' by using the 'cd' command)  
 (Please change the path '/home/jdk-17.0.10/bin/java' in the following 3 commands accordingly, if the folder 'jdk-17.0.10' is in another directory other than '/home')  
 (Alternatively you can first add Java to Linux PATH variable as follows: Add this line "export PATH=/home/jdk-17.0.10/bin/java:${PATH}" to the end of the hidden '.bashrc' file in your home directory, run the command <b>"source ~/.bashrc"</b>, then the following 3 commands can be simplified to <b>"java -cp MNBC.jar -Xmx1G MNBC ..."</b>)  
 1. Run the following command in a terminal window to generate the taxonomy file of the reference database:  
