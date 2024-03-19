@@ -5,7 +5,7 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 *********************************************************************************************************  
 <b>Prerequisites:</b>  
 1. Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads.  
-For the Linux operating system, download the 'jdk-17_linux-x64_bin.tar.gz' file (https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz) （for example, to the '/home' directory), and decompress it with the command <b>"tar -xzvf jdk-17_linux-x64_bin.tar.gz"</b>. Then a new folder 'jdk-17.0.10' appears in the '/home' directory.  
+For the Linux operating system, using the command <b>wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz</b> to download the 'jdk-17_linux-x64_bin.tar.gz' file to your home directory, and decompress it with the command <b>"tar -xzvf jdk-17_linux-x64_bin.tar.gz"</b>. Then a new folder 'jdk-17.0.10' appears.  
 2. Please download this repository using the command <b>"git clone https://github.com/ComputationalPathogens/MNBC"</b>, then a new folder 'MNBC' appears.  
 In the 'example' subfolder, decompress the file 'taxdmp.zip' using the command <b>"unzip taxdmp.zip"</b>.   
 *********************************************************************************************************  
@@ -16,11 +16,11 @@ The 'example' folder includes a small demo, which is described below to demonstr
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database (i.e. the 'RefSeq_genomes' folder) contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
 
 <b>Tool usage (3 steps):</b>  
-(Please first open a terminal window, and change to the folder 'MNBC' by using the 'cd' command)  
-(Please change the path '/home/jdk-17.0.10/bin/java' in the following 3 commands accordingly, if the folder 'jdk-17.0.10' is in another directory other than '/home')  
-(Alternatively you can first add Java to Linux PATH variable as follows: Add this line "export PATH=/home/jdk-17.0.10/bin/java:${PATH}" to the end of the hidden '.bashrc' file in your home directory, run the command <b>"source ~/.bashrc"</b>, then the following 3 commands can be simplified to <b>"java -cp MNBC.jar -Xmx1G MNBC ..."</b>)  
+(Please first open a terminal window, and change to the folder 'MNBC' by using the command </b>"cd MNBC"</b>)  
+(Please change the path '~/jdk-17.0.10/bin/java' in the following 3 commands accordingly, if the folder 'jdk-17.0.10' is in another directory other than your home directory)  
+(Alternatively you can first add Java to Linux PATH variable as follows: Add this line "export PATH=~/jdk-17.0.10/bin/java:${PATH}" to the end of the hidden '.bashrc' file in your home directory, run the command <b>"source ~/.bashrc"</b>, then the following 3 commands can be simplified to <b>"java -cp MNBC.jar -Xmx1G MNBC ..."</b>)  
 1. Copy the following command to a terminal window to generate the taxonomy file of the reference database:  
-<b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt</b>  
+<b>~/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt</b>  
 (The following help menu displays by using '-h')  
 -a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt downloaded from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))  
 -n:	Taxonomy nodes.dmp file downoaded from NCBI (The file 'taxdmp.zip' is downloaded from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)  
@@ -28,7 +28,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 -o:	Output taxonomy file for the database
 
 2. Copy the following command to a terminal window to build the database:  
-<b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/</b>  
+<b>~/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/</b>  
 (The following help menu displays by using '-h')  
 -k:	K-mer length  
 -c:	Number of threads  
@@ -38,7 +38,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 -b (optional): Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.
 
 3. Copy the following command to a terminal window to classify the reads against the database:  
-<b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta</b>  
+<b>~/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta</b>  
 (The following help menu displays by using '-h')  
 -k: K-mer length  
 -c: Number of threads  
