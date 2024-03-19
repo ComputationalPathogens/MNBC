@@ -4,7 +4,8 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 
 *********************************************************************************************************  
 <b>Prerequisites:</b>  
-1. Setup Java: Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads. In Linux, use the following command to download the 'jdk-17_linux-x64_bin.tar.gz' file  
+## Setup Java
+Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads. In Linux, use the following command to download the 'jdk-17_linux-x64_bin.tar.gz' file  
 ````
 $ git clone https://github.com/ComputationalPathogens/MNBC
 ````
@@ -13,6 +14,7 @@ Decompress it with the following command
 $ tar -xzvf jdk-17_linux-x64_bin.tar.gz
 ````
 Then a new folder 'jdk-17.0.10' appears.<br/>
+
 (Alternatively, you can use the command "<b>mamba create -n java -c conda-forge openjdk</b>" to install Java JDK in mamba/conda, then run the command "<b>mamba activate java</b>" to activate the Java environment)  
 2. Download tool: Please download this repository using the command "<b>git clone https://github.com/ComputationalPathogens/MNBC</b>", then a new folder 'MNBC' appears.  
 Change to the 'example' subfolder using the command "<b>cd MNBC/example</b>", decompress the file 'taxdmp.zip' using the command "<b>unzip taxdmp.zip</b>".   
