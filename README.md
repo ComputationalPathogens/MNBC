@@ -4,8 +4,9 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 
 *********************************************************************************************************  
 <b>Prerequisites:</b>  
-1. Setup Java: Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads.  
+1. Setup Java: 1st Method: Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads.  
 In Linux, use the command "<b>wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz</b>" to download the 'jdk-17_linux-x64_bin.tar.gz' file, and decompress it with the command "<b>tar -xzvf jdk-17_linux-x64_bin.tar.gz</b>". Then a new folder 'jdk-17.0.10' appears.  
+(Alternatively, use the command "<b>mamba create -n java -c conda-forge openjdk" to install Java JDK in mamba (or conda), then run the command "<b>mamba activate java</b>" to activate the Java environment)  
 2. Download tool: Please download this repository using the command "<b>git clone https://github.com/ComputationalPathogens/MNBC</b>", then a new folder 'MNBC' appears.  
 Change to the 'example' subfolder using the command "<b>cd MNBC/example</b>", decompress the file 'taxdmp.zip' using the command "<b>unzip taxdmp.zip</b>".   
 *********************************************************************************************************  
@@ -18,7 +19,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 <b>Tool usage (3 steps):</b>  
 Change to the 'MNBC' folder using the command "<b>cd ..</b>"  
 
-(Alternatively you can first add Java to Linux PATH variable as follows: Add this line "<b>export PATH=<parent_directory>/jdk-17.0.10/bin/java:${PATH}</b>" to the end of the '.bashrc' file in your home directory (replace <parent_directory> with the actual path). Run the command "<b>source ~/.bashrc</b>", then the following 3 commands can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>")  
+(If you installed Java JDK in mamba/conda, then the following 3 commands can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>")  
 1. Copy the following command to generate the taxonomy file of the reference database:  
 <b>../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt</b>  
 (The following help menu displays by using '-h')  
