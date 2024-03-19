@@ -5,8 +5,8 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 *********************************************************************************************************  
 <b>Prerequisites:</b>  
 1. Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads.  
-For the Linux operating system, download the 'jdk-17_linux-x64_bin.tar.gz' file (https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz) （for example, to the '/home' directory), and decompress it with the command <b>tar -xzvf jdk-17_linux-x64_bin.tar.gz</b>. Then a new folder 'jdk-17.0.10' appears in the '/home' directory.  
-2. Please download this repository using the command <b>git clone https://github.com/ComputationalPathogens/MNBC</b>  
+For the Linux operating system, download the 'jdk-17_linux-x64_bin.tar.gz' file (https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz) （for example, to the '/home' directory), and decompress it with the command <b>"tar -xzvf jdk-17_linux-x64_bin.tar.gz"</b>. Then a new folder 'jdk-17.0.10' appears in the '/home' directory.  
+2. Please download this repository using the command <b>"git clone https://github.com/ComputationalPathogens/MNBC"</b>  
 *********************************************************************************************************  
 
 The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used in this demo and output files produced in the following 3 steps are included in this folder, so the 3 commands can be directly run in a terminal window.  
@@ -17,12 +17,12 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 <b>Tool usage (3 steps):</b>  
 (Please first open a terminal window, and change to the directory containing the 'MNBC.jar' file by using the 'cd' command)  
 (Please change the path '/home/jdk-17.0.10/bin/java' in the following 3 commands accordingly, if the folder 'jdk-17.0.10' is in another directory other than '/home')  
-(Alternatively, add this line "export PATH=/home/jdk-17.0.10/bin/java:${PATH}" to the end of the hidden '.bashrc' file in your home directory, run the command <b>source ~/.bashrc</b>, then the following 3 commands can be simplified to <b>java -cp MNBC.jar ...</b>)  
+(Alternatively you can first add Java to Linux PATH variable as follows: Add this line "export PATH=/home/jdk-17.0.10/bin/java:${PATH}" to the end of the hidden '.bashrc' file in your home directory, run the command <b>source ~/.bashrc</b>, then the following 3 commands can be simplified to <b>java -cp MNBC.jar ...</b>)  
 1. Run the following command in a terminal window to generate the taxonomy file of the reference database:  
-<b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i RefSeq_genomes/ -a assembly_summary_refseq.txt -n taxdmp/nodes.dmp -o taxonomy.txt</b>  
+<b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i RefSeq_genomes/ -a assembly_summary_refseq.txt -n nodes.dmp -o taxonomy.txt</b>  
 (The following help menu displays by using '-h')  
 -a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt downloaded from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))  
--n:	Taxonomy nodes.dmp file downoaded from NCBI (Please decompress the file 'taxdmp.zip' using the command <b>unzip taxdmp.zip</b>, then the folder 'taxdmp' appears. The file 'taxdmp.zip' is downloaded from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)  
+-n:	Taxonomy nodes.dmp file downoaded from NCBI (Please decompress the file 'taxdmp.zip' using the command <b>"unzip taxdmp.zip"</b>. The file 'taxdmp.zip' is downloaded from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)  
 -i:	Input directory containing the (gzipped) files of reference sequences in the database (e.g. GCF_000834455.1_ASM83445v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
 -o:	Output taxonomy file for the database
 
