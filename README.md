@@ -16,7 +16,8 @@ The 'example' folder includes a small demo, which is described below to demonstr
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database (i.e. the 'RefSeq_genomes' folder) contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
 
 <b>Tool usage (3 steps):</b>  
-(Please first open a terminal window, and change to the folder 'MNBC' by using the command "<b>cd <parent_directory>/MNBC</b>")  
+In the terminal window, change to the 'MNBC' folder using the command "<b>cd <parent_directory>/MNBC</b>"  
+
 (Alternatively you can first add Java to Linux PATH variable as follows: Add this line "<b>export PATH=<parent_directory>/jdk-17.0.10/bin/java:${PATH}</b>" to the end of the '.bashrc' file in your home directory, run the command "<b>source ~/.bashrc</b>", then the following 3 commands can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>")  
 1. Copy the following command to a terminal window to generate the taxonomy file of the reference database:  
 <b><parent_directory>/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt</b>  
