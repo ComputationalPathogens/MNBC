@@ -5,8 +5,8 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 *********************************************************************************************************  
 <b>Prerequisites:</b>  
 1. Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads.  
-For the Linux operating system, using the command <b>wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz</b> to download the 'jdk-17_linux-x64_bin.tar.gz' file to your home directory, and decompress it with the command <b>"tar -xzvf jdk-17_linux-x64_bin.tar.gz"</b>. Then a new folder 'jdk-17.0.10' appears.  
-2. Please download this repository using the command <b>"git clone https://github.com/ComputationalPathogens/MNBC"</b>, then a new folder 'MNBC' appears.  
+For the Linux operating system, using the command "<b>wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz</b>" to download the 'jdk-17_linux-x64_bin.tar.gz' file to your home directory, and decompress it with the command "<b>tar -xzvf jdk-17_linux-x64_bin.tar.gz</b>". Then a new folder 'jdk-17.0.10' appears.  
+2. Please download this repository using the command "<b>git clone https://github.com/ComputationalPathogens/MNBC"</b>", then a new folder 'MNBC' appears.  
 In the 'example' subfolder, decompress the file 'taxdmp.zip' using the command <b>"unzip taxdmp.zip"</b>.   
 *********************************************************************************************************  
 
@@ -16,9 +16,9 @@ The 'example' folder includes a small demo, which is described below to demonstr
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database (i.e. the 'RefSeq_genomes' folder) contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
 
 <b>Tool usage (3 steps):</b>  
-(Please first open a terminal window, and change to the folder 'MNBC' by using the command </b>"cd MNBC"</b>)  
+(Please first open a terminal window, and change to the folder 'MNBC' by using the command "</b>cd MNBC</b>")  
 (Please change the path '~/jdk-17.0.10/bin/java' in the following 3 commands accordingly, if the folder 'jdk-17.0.10' is in another directory other than your home directory)  
-(Alternatively you can first add Java to Linux PATH variable as follows: Add this line "export PATH=~/jdk-17.0.10/bin/java:${PATH}" to the end of the hidden '.bashrc' file in your home directory, run the command <b>"source ~/.bashrc"</b>, then the following 3 commands can be simplified to <b>"java -cp MNBC.jar -Xmx1G MNBC ..."</b>)  
+(Alternatively you can first add Java to Linux PATH variable as follows: Add this line "export PATH=~/jdk-17.0.10/bin/java:${PATH}" to the end of the hidden '.bashrc' file in your home directory, run the command "<b>source ~/.bashrc</b>", then the following 3 commands can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>")  
 1. Copy the following command to a terminal window to generate the taxonomy file of the reference database:  
 <b>~/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt</b>  
 (The following help menu displays by using '-h')  
