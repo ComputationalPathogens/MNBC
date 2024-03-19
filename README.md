@@ -28,7 +28,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 -o:	Output taxonomy file for the database
 
 2. Run the following command in a terminal window to build the database:  
-<b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i RefSeq_genomes/ -o db/</b>  
+<b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/</b>  
 (The following help menu displays by using '-h')  
 -k:	K-mer length  
 -c:	Number of threads  
@@ -38,7 +38,7 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 -b (optional): Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.
 
 3. Run the following command in a terminal window to classify the reads against the database:  
-<b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d db/ -m taxonomy.txt -o result.txt -t 1 reads.fasta</b>  
+<b>/home/jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta</b>  
 (The following help menu displays by using '-h')  
 -k: K-mer length  
 -c: Number of threads  
