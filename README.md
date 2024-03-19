@@ -6,7 +6,8 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 <b>Prerequisites:</b>  
 1. Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads.  
 For the Linux operating system, download the 'jdk-17_linux-x64_bin.tar.gz' file (https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz) （for example, to the '/home' directory), and decompress it with the command <b>"tar -xzvf jdk-17_linux-x64_bin.tar.gz"</b>. Then a new folder 'jdk-17.0.10' appears in the '/home' directory.  
-2. Please download this repository using the command <b>"git clone https://github.com/ComputationalPathogens/MNBC"</b>, then a new folder 'MNBC' appears. In the 'example' subfolder, decompress the file 'taxdmp.zip' using the command <b>"unzip taxdmp.zip"</b>.   
+2. Please download this repository using the command <b>"git clone https://github.com/ComputationalPathogens/MNBC"</b>, then a new folder 'MNBC' appears.  
+In the 'example' subfolder, decompress the file 'taxdmp.zip' using the command <b>"unzip taxdmp.zip"</b>.   
 *********************************************************************************************************  
 
 The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used in this demo and output files produced in the following 3 steps are included in this folder, so the 3 commands can be directly run in a terminal window.  
