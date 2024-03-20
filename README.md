@@ -80,7 +80,9 @@ $../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example
 -p (optional): Penalty for absent minimizers (default -2000)  
 -e (optional): Threshold on the difference between adjacent scores (default 1500)
 
-<b>Format of final classification file:</b>  
+When using a large reference database, increase the memory amount that MNBC can use by changing the '-Xmx' parameter.
+
+## Format of classification file  
 In the final tab-delimited classification file 'result.txt' produced by the last command, the 1st row contains column headers, and each subsequent row gives the classification for a read.  
 
 Read	Genome	Species	Genus	Family	Order	Class	Phylum	Superkingdom  
