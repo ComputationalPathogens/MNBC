@@ -70,7 +70,7 @@ cd ..
 ````
 ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta
 ````
-(The following help menu displays by using '-h')  
+(The following help menu displays by using ```-h```)  
 ```-k```: K-mer length  
 ```-c```: Number of threads  
 ```d```: Input database directory  
