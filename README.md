@@ -30,7 +30,7 @@ unzip taxdmp.zip
 ````
 *********************************************************************************************************  
 
-## Run MNBC on the example data
+## Run MNBC on the example
 The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used and output files produced in the following 3 steps are included in this folder, so the commands can be directly run in a terminal window.  
 
 <b>Problem description:</b>  
