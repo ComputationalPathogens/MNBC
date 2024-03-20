@@ -58,27 +58,27 @@ cd ..
 ````
 ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/
 ````
-(The following help menu displays by using '-h')  
--k:	K-mer length  
--c:	Number of threads  
--i:	Input directory containing the (gzipped) files of reference sequences (e.g. GCF_000834455.1_ASM83445v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
--o: Existing output database directory (please first make this directory if it doesn't already exist)  
--f (optional): Filtering threshold on the sequence length (an integer >= 0). Chromosomes with lengths below this threshold are ignored as well as all plasmids. The default value is 0 (i.e. all chromosomes are retained).  
--b (optional): Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.
+(The following help menu displays by using ```-h```)  
+```-k```:	K-mer length  
+```-c```:	Number of threads  
+```-i```:	Input directory containing the (gzipped) files of reference sequences (e.g. GCF_000834455.1_ASM83445v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
+```-o```: Existing output database directory (please first make this directory if it doesn't already exist)  
+```-f (optional)```: Filtering threshold on the sequence length (an integer >= 0). Chromosomes with lengths below this threshold are ignored as well as all plasmids. The default value is 0 (i.e. all chromosomes are retained).  
+```-b (optional)```: Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.
 
 <b>Step 3</b>: Run the following command to classify the reads against the database:  
 ````
 ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta
 ````
 (The following help menu displays by using '-h')  
--k: K-mer length  
--c: Number of threads  
--d: Input database directory  
--m:	Input taxonomy file  
--o:	Output classification file  
--t:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.  
--p (optional): Penalty for absent minimizers (default -2000)  
--e (optional): Threshold on the difference between adjacent scores (default 1500)
+```-k```: K-mer length  
+```-c```: Number of threads  
+```d```: Input database directory  
+```-m```:	Input taxonomy file  
+```-o```:	Output classification file  
+```t```:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.  
+```-p (optional)```: Penalty for absent minimizers (default -2000)  
+```-e (optional)```: Threshold on the difference between adjacent scores (default 1500)
 
 When using a large reference database, increase the memory amount that MNBC can use by changing the '-Xmx' parameter.
 
