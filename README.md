@@ -14,7 +14,7 @@ $ tar -xzvf jdk-17_linux-x64_bin.tar.gz
 ````
 Then a new folder 'jdk-17.0.10' appears.<br/>
 
-(Alternatively, you can use the following command "<b>mamba create -n java -c conda-forge openjdk</b>" to install Java JDK in mamba/conda, then run the command "<b>mamba activate java</b>" to activate the Java environment)  
+(Alternatively, you can use the command "<b>mamba create -n java -c conda-forge openjdk</b>" to install Java JDK in mamba/conda, then run the command "<b>mamba activate java</b>" to activate the Java environment)  
 ## Install MNBC
 Please download this repository using the following command "<b></b>", then a new folder 'MNBC' appears.  
 ````
@@ -30,6 +30,7 @@ $ unzip taxdmp.zip
 ````
 *********************************************************************************************************  
 
+## Run MNBC on the example data
 The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used and output files produced in the following 3 steps are included in this folder, so the commands can be directly run in a terminal window.  
 
 <b>Problem description:</b>  
