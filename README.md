@@ -24,7 +24,7 @@ Change to the 'example' subfolder using the following command.
 ````
 cd MNBC/example
 ````
-Decompress the file 'taxdmp.zip' using this command, then the file 'nodes.dmp' appears.  
+Decompress the file 'taxdmp.zip' using the following command, then the file 'nodes.dmp' appears.  
 ````
 unzip taxdmp.zip
 ````
