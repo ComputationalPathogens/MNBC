@@ -43,6 +43,7 @@ $ cd ..
 ````
 
 (If you installed Java JDK in mamba/conda, then the following 3 commands can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>")  
+
 <b>Step 1</b>: Run the following command to generate the taxonomy file of the reference database:  
 ````
 $ ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt
