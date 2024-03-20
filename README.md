@@ -4,11 +4,11 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 
 *********************************************************************************************************  
 ## Install Java
-Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads. In Linux, use the following command to download the 'jdk-17_linux-x64_bin.tar.gz' file  
+Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads. In Linux, use the following command to download the 'jdk-17_linux-x64_bin.tar.gz' file.  
 ````
 git clone https://github.com/ComputationalPathogens/MNBC
 ````
-Decompress it with the following command  
+Decompress it with the following command.  
 ````
 tar -xzvf jdk-17_linux-x64_bin.tar.gz
 ````
@@ -16,15 +16,15 @@ Then a new folder 'jdk-17.0.10' appears.<br/>
 
 (Alternatively, you can use the command "<b>mamba create -n java -c conda-forge openjdk</b>" to install Java JDK in mamba/conda, then run the command "<b>mamba activate java</b>" to activate the Java environment)  
 ## Install MNBC
-Please download this repository using the following command "<b></b>", then a new folder 'MNBC' appears.  
+Please download this repository using the following command, then a new folder 'MNBC' appears.  
 ````
 git clone https://github.com/ComputationalPathogens/MNBC
 ````
-Change to the 'example' subfolder using the following command  
+Change to the 'example' subfolder using the following command.  
 ````
 cd MNBC/example
 ````
-Decompress the file 'taxdmp.zip' using this command  
+Decompress the file 'taxdmp.zip' using this command, then the file 'nodes.dmp' appears.  
 ````
 unzip taxdmp.zip
 ````
@@ -37,7 +37,7 @@ The 'example' folder includes a small demo, which is described below to demonstr
 The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database (i.e. the 'RefSeq_genomes' folder) contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
 
 <b>Tool usage (3 steps):</b>  
-Change to the 'MNBC' folder using the following command  
+Change to the 'MNBC' folder using the following command.  
 ````
 cd ..
 ````
