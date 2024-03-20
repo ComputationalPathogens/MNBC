@@ -6,11 +6,11 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 ## Install Java
 Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads. In Linux, use the following command to download the 'jdk-17_linux-x64_bin.tar.gz' file  
 ````
-$ git clone https://github.com/ComputationalPathogens/MNBC
+git clone https://github.com/ComputationalPathogens/MNBC
 ````
 Decompress it with the following command  
 ````
-$ tar -xzvf jdk-17_linux-x64_bin.tar.gz
+tar -xzvf jdk-17_linux-x64_bin.tar.gz
 ````
 Then a new folder 'jdk-17.0.10' appears.<br/>
 
@@ -18,15 +18,15 @@ Then a new folder 'jdk-17.0.10' appears.<br/>
 ## Install MNBC
 Please download this repository using the following command "<b></b>", then a new folder 'MNBC' appears.  
 ````
-$ git clone https://github.com/ComputationalPathogens/MNBC
+git clone https://github.com/ComputationalPathogens/MNBC
 ````
 Change to the 'example' subfolder using the following command  
 ````
-$ cd MNBC/example
+cd MNBC/example
 ````
 Decompress the file 'taxdmp.zip' using this command  
 ````
-$ unzip taxdmp.zip
+unzip taxdmp.zip
 ````
 *********************************************************************************************************  
 
@@ -39,14 +39,14 @@ The 'reads.fasta' file contains ten short-read sequences to be classified. Five 
 <b>Tool usage (3 steps):</b>  
 Change to the 'MNBC' folder using the following command  
 ````
-$ cd ..
+cd ..
 ````
 
 (If you installed Java JDK in mamba/conda, then the following 3 commands can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>")  
 
 <b>Step 1</b>: Run the following command to generate the taxonomy file of the reference database:  
 ````
-$ ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt
+../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt
 ````
 (The following help menu displays by using '-h')  
 -a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt downloaded from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))  
@@ -56,7 +56,7 @@ $ ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_ge
 
 <b>Step 2</b>: Run the following command to build the database:  
 ````
-$ ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/
+../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/
 ````
 (The following help menu displays by using '-h')  
 -k:	K-mer length  
@@ -68,7 +68,7 @@ $ ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i
 
 <b>Step 3</b>: Run the following command to classify the reads against the database:  
 ````
-$../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta
+../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta
 ````
 (The following help menu displays by using '-h')  
 -k: K-mer length  
