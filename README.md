@@ -15,8 +15,19 @@ $ tar -xzvf jdk-17_linux-x64_bin.tar.gz
 Then a new folder 'jdk-17.0.10' appears.<br/>
 
 (Alternatively, you can use the following command "<b>mamba create -n java -c conda-forge openjdk</b>" to install Java JDK in mamba/conda, then run the command "<b>mamba activate java</b>" to activate the Java environment)  
-2. Download tool: Please download this repository using the command "<b>git clone https://github.com/ComputationalPathogens/MNBC</b>", then a new folder 'MNBC' appears.  
-Change to the 'example' subfolder using the command "<b>cd MNBC/example</b>", decompress the file 'taxdmp.zip' using the command "<b>unzip taxdmp.zip</b>".   
+## Install MNBC
+Please download this repository using the following command "<b></b>", then a new folder 'MNBC' appears.  
+````
+$ git clone https://github.com/ComputationalPathogens/MNBC
+````
+Change to the 'example' subfolder using the following command  
+````
+$ cd MNBC/example
+````
+Decompress the file 'taxdmp.zip' using this command  
+````
+$ unzip taxdmp.zip
+````
 *********************************************************************************************************  
 
 The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used and output files produced in the following 3 steps are included in this folder, so the commands can be directly run in a terminal window.  
