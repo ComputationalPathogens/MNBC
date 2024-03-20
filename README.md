@@ -73,10 +73,10 @@ cd ..
 (The following help menu displays by using ```-h```)  
 ```-k```: K-mer length  
 ```-c```: Number of threads  
-```d```: Input database directory  
+```-d```: Input database directory  
 ```-m```:	Input taxonomy file  
 ```-o```:	Output classification file  
-```t```:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.  
+```-t```:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.  
 ```-p (optional)```: Penalty for absent minimizers (default -2000)  
 ```-e (optional)```: Threshold on the difference between adjacent scores (default 1500)
 
