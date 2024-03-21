@@ -80,18 +80,18 @@ cd ..
 ```-p (optional)```: Penalty for absent minimizers (default -2000)  
 ```-e (optional)```: Threshold on the difference between adjacent scores (default 1500)
 
-When using a large reference database, increase the memory amount that MNBC can use by changing the '-Xmx' parameter.
+When using a large reference database, increase the memory amount that MNBC can use in Steps 2&3 by changing the '-Xmx' parameter.
 
 <b>Add Java to Linux PATH variable (optional):</b>  
 Replace <parent_directory> in the following line with the actual path, and append this line to the end of the '.bashrc' file in your home directory.  
 ````
 export PATH=<parent_directory>/jdk-17.0.10/bin:${PATH}
 ````
-Either open a new terminal window, or run the following command.
+Either open a new terminal window, or run the following command in the current window.
 ````
 source ~/.bashrc
 ````
-Then the above commands in the 3 steps can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>".
+Then the commands in the above 3 steps can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>".
 
 ## Format of classification file
 In the final tab-delimited classification file 'result.txt' produced by the last command, the 1st row contains column headers, and each subsequent row gives the classification for a read.  
