@@ -80,7 +80,7 @@ cd ..
 ```-p (optional)```: Penalty for absent minimizers (default -2000)  
 ```-e (optional)```: Threshold on the difference between adjacent scores (default 1500)
 
-When using a large reference database, increase the memory amount that MNBC can use in Steps 2&3 by changing the '-Xmx' parameter.
+When using a large reference database, increase the memory amount that MNBC can use in Steps 2 and 3 by changing the '-Xmx' parameter.
 
 <b>Add Java to Linux PATH variable (optional):</b>  
 Replace <parent_directory> in the following line with the actual path, and append this line to the end of the '.bashrc' file in your home directory.  
