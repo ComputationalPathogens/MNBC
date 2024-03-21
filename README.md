@@ -42,9 +42,21 @@ Change to the 'MNBC' folder using the following command.
 cd ..
 ````
 
-(If you installed Java JDK in mamba/conda, then the following 3 commands can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>")  
+<b>(optional) Add Java to Linux PATH variable:</b>  
+Replace <parent_directory> in the following line with the actual path, and append this line to the end of the '.bashrc' file in your home directory.  
+````
+export PATH=<parent_directory>/jdk-17.0.10/bin:${PATH}
+````
+Either open a new terminal window, or run the following command in the current window.
+````
+source ~/.bashrc
+````
+Then the commands in the following 3 steps can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>".
 
-<b>Step 1</b>: Run the following command to generate the taxonomy file of the reference database:  
+(If you installed Java JDK in mamba/conda, then the 3 commands can be also simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>")  
+
+<b>Step 1</b>:  
+Run the following command to generate the taxonomy file of the reference database:  
 ````
 ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt
 ````
@@ -54,7 +66,8 @@ cd ..
 ```-i```:	Input directory containing the (gzipped) files of reference sequences in the database (e.g. GCF_000834455.1_ASM83445v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
 ```-o```:	Output taxonomy file for the database
 
-<b>Step 2</b>: Run the following command to build the database:  
+<b>Step 2</b>:  
+Run the following command to build the database:  
 ````
 ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/
 ````
@@ -66,7 +79,8 @@ cd ..
 ```-f (optional)```: Filtering threshold on the sequence length (an integer >= 0). Chromosomes with lengths below this threshold are ignored as well as all plasmids. The default value is 0 (i.e. all chromosomes are retained).  
 ```-b (optional)```: Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.
 
-<b>Step 3</b>: Run the following command to classify the reads against the database:  
+<b>Step 3</b>:  
+Run the following command to classify the reads against the database:  
 ````
 ../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta
 ````
@@ -81,17 +95,6 @@ cd ..
 ```-e (optional)```: Threshold on the difference between adjacent scores (default 1500)
 
 When using a large reference database, increase the memory amount that MNBC can use in Steps 2 and 3 by changing the '-Xmx' parameter.
-
-<b>Add Java to Linux PATH variable (optional):</b>  
-Replace <parent_directory> in the following line with the actual path, and append this line to the end of the '.bashrc' file in your home directory.  
-````
-export PATH=<parent_directory>/jdk-17.0.10/bin:${PATH}
-````
-Either open a new terminal window, or run the following command in the current window.
-````
-source ~/.bashrc
-````
-Then the commands in the above 3 steps can be simplified to "<b>java -cp MNBC.jar -Xmx1G MNBC ...</b>".
 
 ## Format of classification file
 In the final tab-delimited classification file 'result.txt' produced by the last command, the 1st row contains column headers, and each subsequent row gives the classification for a read.  
