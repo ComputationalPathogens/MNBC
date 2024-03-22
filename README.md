@@ -96,7 +96,7 @@ Run the following command to classify the reads against the database:
 
 When using a large reference database, increase the memory amount that MNBC can use in Steps 2 and 3 by changing the '-Xmx' parameter.
 
-## Format of taxonomy file
+## Format of the taxonomy file
 In the tab-delimited taxonomy file 'taxonomy.txt' produced in Step 1, the 1st row contains column headers, and each subsequent row gives the taxonomy information for a reference genome in the database:
 ````
 RefSeq assembly ID	taxid.species	taxid.genus	taxid.family	taxid.order	taxid.class	taxid.phylum	taxid.superkingdom	Organism name
@@ -105,7 +105,7 @@ GCF_022869985.1	562	561	543	91347	1236	1224	2	Escherichia coli O104:H4 strain=Pa
 ````
 The 1st column is the genome assembly ID, the 2nd to 8th columns are the taxon ID numbers of the genome, and the 9th column is the string name (species and strain) of the genome.
 
-## Format of final classification file
+## Format of the classification file
 In the tab-delimited classification file 'result.txt' produced in Step 3, the 1st row contains column headers, and each subsequent row gives the classification for a read:  
 ````
 Read	Genome	Species	Genus	Family	Order	Class	Phylum	Superkingdom  
