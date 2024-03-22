@@ -96,9 +96,18 @@ Run the following command to classify the reads against the database:
 
 When using a large reference database, increase the memory amount that MNBC can use in Steps 2 and 3 by changing the '-Xmx' parameter.
 
-## Format of classification file
-In the final tab-delimited classification file 'result.txt' produced by the last command, the 1st row contains column headers, and each subsequent row gives the classification for a read.  
+## Format of taxonomy file
+In the tab-delimited taxonomy file 'taxonomy.txt' produced in Step 1, the 1st row contains column headers, and each subsequent row gives the taxonomy information for a reference genome in the database:
+````
+RefSeq assembly ID	taxid.species	taxid.genus	taxid.family	taxid.order	taxid.class	taxid.phylum	taxid.superkingdom	Organism name
+GCF_000834455.1	29485	629	1903411	91347	1236	1224	2	Yersinia rohdei strain=YRA
+GCF_022869985.1	562	561	543	91347	1236	1224	2	Escherichia coli O104:H4 strain=PartB-EcoliO104H4-RM8376
+````
+The 1st column is the genome assembly ID, the 2nd to 8th columns are the taxon ID numbers of the genome, and the 9th column is the string name (species and strain) of the genome.
 
+## Format of final classification file
+In the tab-delimited classification file 'result.txt' produced in Step 3, the 1st row contains column headers, and each subsequent row gives the classification for a read:  
+````
 Read	Genome	Species	Genus	Family	Order	Class	Phylum	Superkingdom  
 SRR227300.1.1	GCF_022869985.1	562	561	543	91347	1236	1224	2  
 SRR227300.2.1	GCF_022869985.1	562	561	543	91347	1236	1224	2  
@@ -110,7 +119,7 @@ SRR032501.1.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2
 SRR032501.3.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
 SRR032501.4.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
 SRR032501.5.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
-
+````
 The 1st column is the read ID, the 2nd column is the genome ID assigned to the read, and the next 7 columns are the assigned taxon ID numbers from the species level to the domain level. It can be seen that all 10 reads were assigned the correct species-level taxon IDs (i.e. E. coli -- 562, Yersinia rohdei -- 29485).  
 
 Note that the value of the 'Genome' column can be 'null' -- this means MNBC did not classify to the genome level due to the presence of multiple candidates, but classified to the species level.
