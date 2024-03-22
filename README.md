@@ -103,7 +103,7 @@ Assembly ID	taxid.species	taxid.genus	taxid.family	taxid.order	taxid.class	taxid
 GCF_000834455.1	29485	629	1903411	91347	1236	1224	2	Yersinia rohdei strain=YRA
 GCF_022869985.1	562	561	543	91347	1236	1224	2	Escherichia coli O104:H4 strain=PartB-EcoliO104H4-RM8376
 ````
-The 1st column is the genome assembly ID, the 2nd to 8th columns are the taxon ID numbers of the genome, and the 9th column is the string name (species and strain) of the genome.
+The 1st column is the genome assembly ID, the 2nd to 8th columns are the taxon ID numbers of the genome from the species level to the domain level, and the 9th column is the string name (species and strain) of the genome.
 
 ## Format of the classification file
 In the tab-delimited classification file 'result.txt' produced in Step 3, the 1st row contains column headers, and each subsequent row gives the classification for a read:  
