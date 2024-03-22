@@ -43,7 +43,7 @@ cd ..
 ````
 
 <b>(Optional) add Java to Linux PATH variable:</b>  
-Replace <parent_directory> in the following line with the actual path, and append this line to the end of the '.bashrc' file in your home directory.  
+Replace <parent_directory> in the following line with the actual path, then append this line to the end of the '.bashrc' file in your home directory.  
 ````
 export PATH=<parent_directory>/jdk-17.0.10/bin:${PATH}
 ````
