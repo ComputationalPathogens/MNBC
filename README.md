@@ -94,7 +94,8 @@ Run the following command to classify the reads against the database:
 ```-p (optional)```: Penalty for absent minimizers (default -2000)  
 ```-e (optional)```: Threshold on the difference between adjacent scores (default 1500)
 
-When using a large reference database, increase the memory amount that MNBC can use in Steps 2 and 3 by changing the '-Xmx' parameter.
+<b>Tips</b>:
+When using a large reference database (e.g. one containing all prokaryotic and viral complete genomes with OK taxonomy check status from RefSeq), increase the memory amount that MNBC can use in Steps 2 and 3 by adjusting the '-Xmx' parameter (e.g. -Xmx200G), and also increase the number of CPU cores by adjusting the '-c' parameter (e.g. -c 100) to accelerate.
 
 ## Format of the taxonomy file
 In the tab-delimited taxonomy file 'taxonomy.txt' produced in Step 1, the 1st row contains column headers, and each subsequent row gives the taxonomy information for a reference genome in the database:
