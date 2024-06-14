@@ -1,6 +1,6 @@
 /**
  *
- * @author Ruipeng Lu
+ * @author Ruipeng Lu (ruipeng.lu@inspection.gc.ca)
  * 
  */
 
