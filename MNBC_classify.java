@@ -44,7 +44,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 	private static boolean readType; //Whether reads are paired-end
 	private static String startPath;
 	private static String endPath;
-	private static float unclassifiedThreshold = 0.0F;
+	private static float unclassifiedThreshold = 0.5F;
 	
 	private static String[] genomeIds;
 	private static float[] logFres;
@@ -996,7 +996,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		System.out.println("-m:	Input taxonomy file");
 		System.out.println("-o:	Output classification file");		
 		System.out.println("-t:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.");
-		System.out.println("-u (optional): Filtering threshold on the ratio of the number of common read-genome minimizers over the number of total read minimizers (default 0.5). When set to 0, only reference genomes sharing minimizers with the read are considered, so that the read is left unclassified if no genome has common minimizers with it");
+		System.out.println("-u (optional): Filtering threshold on the ratio of common read-genome minimizers over total read minimizers (default 0.5). When set to 0, reference genomes sharing at lease one minimizer with the read are considered as matches, so that the read will be left unclassified if no genome has common minimizers with it.");
 		System.out.println("-p (optional): Penalty for absent minimizers (default -2000)");
 		System.out.println("-e (optional): Threshold on the difference between adjacent scores (default 1500)");
 	}

@@ -91,6 +91,7 @@ Run the following command to classify the reads against the database:
 ```-m```:	Input taxonomy file  
 ```-o```:	Output classification file  
 ```-t```:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.  
+```-u (optional)```: Filtering threshold on the ratio of common read-genome minimizers over total read minimizers (default 0.5). When set to 0, only reference genomes sharing minimizers with the read are considered, so that the read will be left unclassified if no genome has common minimizers with it.
 ```-p (optional)```: Penalty for absent minimizers (default -2000)  
 ```-e (optional)```: Threshold on the difference between adjacent scores (default 1500)
 
