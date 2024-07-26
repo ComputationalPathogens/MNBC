@@ -44,6 +44,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 	private static boolean readType; //Whether reads are paired-end
 	private static String startPath;
 	private static String endPath;
+	private static float unclassifiedThreshold = 0.0F;
 	
 	private static String[] genomeIds;
 	private static float[] logFres;
@@ -84,6 +85,9 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 					case 'o':
 						outputFilePath = args[i + 1];
 						break;
+					case 'u':
+						unclassifiedThreshold = Float.parseFloat(args[i + 1]);
+						break;
 					case 't':
 						readType = args[i + 1].equals("2") ? true : false; //The parameter value itself is "1" or "2"
 						startPath = args[i + 2];
@@ -98,7 +102,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			}
 		}
 		
-		if((k == 0) || (numberOfThreads == 0) || (dbDirPath == null) || (metaFilePath == null) || (outputFilePath == null) || (startPath == null)) {
+		if((k <= 0) || (numberOfThreads == 0) || (dbDirPath == null) || (metaFilePath == null) || (outputFilePath == null) || (startPath == null)) {
 			System.out.println("Error: not all required parameters are set -- Run 'MNBC classify -h' for help");
 			System.exit(0);
 		}
@@ -192,7 +196,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			String line = reader.readLine();
 			while((line = reader.readLine()) != null) {
 				String[] fields = line.split("\t");
-				if(fields.length == 9) {
+				if(fields.length == 9 || line.endsWith("unclassified")) {
 					finishedReadIds.add(fields[0]);
 				}
 			}
@@ -249,7 +253,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 							addKmersOfOneTestFrag(read[1], readMinimizers);
 							addKmersOfOneTestFrag(read[2], readMinimizers);
 							if(readMinimizers.isEmpty()) {
-								resultQueue.put(read[0] + "\tnull\tnull\tnull\tnull\tnull\tnull\tnull\tnull");
+								resultQueue.put(read[0] + "\tunclassified");
 								continue;
 							}
 							processReadMinimizers(readMinimizers);
@@ -266,7 +270,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 							MutableIntSet readMinimizers = new IntHashSet();							
 							addKmersOfOneTestFrag(read[1], readMinimizers);
 							if(readMinimizers.isEmpty()) {
-								resultQueue.put(read[0] + "\tnull\tnull\tnull\tnull\tnull\tnull\tnull\tnull");
+								resultQueue.put(read[0] + "\tunclassified");
 								continue;
 							}							
 							processReadMinimizers(readMinimizers);
@@ -281,30 +285,67 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		}
 		
 		private void processReadMinimizers(MutableIntSet readMinimizers) throws Exception {
+			String outcome = read[0];
 			TreeMap<Float, MutableIntList> topScores = new TreeMap<>();
-			for(int i = 0; i < genomeIds.length; i++) {							
-				float score = 0.0F;
+			if(unclassifiedThreshold == 0.0F) {
+				for(int i = 0; i < genomeIds.length; i++) {							
+					float score = 0.0F;
+					int counter = 0; // Number of read minimizers shared with genome
 
-				IntIterator it = readMinimizers.intIterator();
-				while(it.hasNext()) {
-					if(genomeMinimizers[i].contains(it.next())) {
-						score += logFres[i];
-					} else {
-						score += kmerPenalty;
+					IntIterator it = readMinimizers.intIterator();
+					while(it.hasNext()) {
+						if(genomeMinimizers[i].contains(it.next())) {
+							score += logFres[i];
+							counter++;
+						} else {
+							score += kmerPenalty;
+						}
 					}
-				}
 
-				if(topScores.containsKey(score)) {
-					topScores.get(score).add(i);
-				} else {
-					MutableIntList genomeIdsWithScore = new IntArrayList();
-					genomeIdsWithScore.add(i);
-					topScores.put(score, genomeIdsWithScore);									
-				}
+					if(counter > 0) {
+						if(topScores.containsKey(score)) {
+							topScores.get(score).add(i);
+						} else {
+							MutableIntList genomeIdsWithScore = new IntArrayList();
+							genomeIdsWithScore.add(i);
+							topScores.put(score, genomeIdsWithScore);									
+						}
+					}					
+				}				
+			} else {
+				int numberOfReadMinimizers = readMinimizers.size();
+				for(int i = 0; i < genomeIds.length; i++) {							
+					float score = 0.0F;
+					int counter = 0; // Number of read minimizers shared with genome
+
+					IntIterator it = readMinimizers.intIterator();
+					while(it.hasNext()) {
+						if(genomeMinimizers[i].contains(it.next())) {
+							score += logFres[i];
+							counter++;
+						} else {
+							score += kmerPenalty;
+						}
+					}
+					
+					if(counter >= (numberOfReadMinimizers * unclassifiedThreshold)) { //At lease (1/unclassifiedThreshold) of read minimizers are in genome, genome is taken into account, make classification
+						if(topScores.containsKey(score)) {
+							topScores.get(score).add(i);
+						} else {
+							MutableIntList genomeIdsWithScore = new IntArrayList();
+							genomeIdsWithScore.add(i);
+							topScores.put(score, genomeIdsWithScore);									
+						}
+					}					
+				}				
+			}
+			if(topScores.isEmpty()) {
+				outcome += "\tunclassified";
+				resultQueue.put(outcome);
+				return;
 			}
 			
-			MutableIntList votingGenomes = processTopScores(topScores);							
-			String outcome = read[0];															
+			MutableIntList votingGenomes = processTopScores(topScores);																		
 			if(votingGenomes.size() == 1) {
 				//System.out.println("Read " + read[0] + " has 1 voting genome");
 				String predictedGenomeId = genomeIds[votingGenomes.getFirst()];
@@ -627,20 +668,20 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 						reader2 = new BufferedReader(new FileReader(endPath));
 					}
 					
-					if(startPath.contains(".fasta")) {
+					if(startPath.contains(".fastq") || startPath.contains(".fq")) {
+						System.out.println("Start reading paired-end FASTQ files " + startPath + " and " + endPath);
+						readTestFragFastqFiles(reader1, reader2);						
+					} else {
 						System.out.println("Start reading paired-end FASTA files " + startPath + " and " + endPath);
 						readTestFragFastaFiles(reader1, reader2);
-					} else {
-						System.out.println("Start reading paired-end FASTQ files " + startPath + " and " + endPath);
-						readTestFragFastqFiles(reader1, reader2);
 					}					
 				} else {				
-					if(startPath.contains(".fasta")) {
+					if(startPath.contains(".fastq") || startPath.contains(".fq")) {
+						System.out.println("Start reading FASTQ file " + startPath);
+						readTestFragFastqFile(reader1);						
+					} else {
 						System.out.println("Start reading FASTA file " + startPath);
 						readTestFragFastaFile(reader1);
-					} else {
-						System.out.println("Start reading FASTQ file " + startPath);
-						readTestFragFastqFile(reader1);
 					}					
 				}
 				
@@ -950,11 +991,12 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		System.out.println("This MNBC_classify tool (v1.0) classifies reads against a reference database.");
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-k:	K-mer length");
-		System.out.println("-c:	Number of threads");
+		System.out.println("-c:	Number of threads");		
 		System.out.println("-d:	Input database directory");
 		System.out.println("-m:	Input taxonomy file");
-		System.out.println("-o:	Output classification file");
+		System.out.println("-o:	Output classification file");		
 		System.out.println("-t:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.");
+		System.out.println("-u (optional): Filtering threshold on the ratio of the number of common read-genome minimizers over the number of total read minimizers (default 0.5). When set to 0, only reference genomes sharing minimizers with the read are considered, so that the read is left unclassified if no genome has common minimizers with it");
 		System.out.println("-p (optional): Penalty for absent minimizers (default -2000)");
 		System.out.println("-e (optional): Threshold on the difference between adjacent scores (default 1500)");
 	}
