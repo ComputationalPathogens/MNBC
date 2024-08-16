@@ -165,7 +165,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			PrintWriter writer = null;
 			if(finishedReadIds == null) {
 				writer = new PrintWriter(new FileWriter(outputFilePath), true);
-				writer.println("Read\tGenome\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tSuperkingdom");
+				writer.println("Read\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tDomain\tCandidateGenomes");
 			} else {
 				writer = new PrintWriter(new FileWriter(outputFilePath, true), true);
 			}			
@@ -349,11 +349,11 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			if(votingGenomes.size() == 1) {
 				//System.out.println("Read " + read[0] + " has 1 voting genome");
 				String predictedGenomeId = genomeIds[votingGenomes.getFirst()];
-				String[] predictedTaxonIds = completeGenomeId2TaxIds.get(predictedGenomeId);
-				outcome += "\t" + predictedGenomeId;
+				String[] predictedTaxonIds = completeGenomeId2TaxIds.get(predictedGenomeId);				
 				for(String predictedId : predictedTaxonIds) {
 					outcome += "\t" + predictedId;
-				}								
+				}
+				outcome += "\t" + predictedGenomeId;
 			} else {
 				//System.out.println("Read " + read[0] + " has " + votingGenomes.size() + " voting genomes");
 				HashMap<String, ArrayList<String>> speciesId2GenomeIds = fillSpeciesId2GenomeIds(votingGenomes);								
@@ -368,10 +368,15 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 				}
 				//System.out.println("Dominant species is " + dominantSpecies + " with " + dominantCount + " genomes");
 				
-				outcome += "\tnull";
-				String[] taxonIds = completeGenomeId2TaxIds.get(speciesId2GenomeIds.get(dominantSpecies).get(0));
+				ArrayList<String> dominantGenomes = speciesId2GenomeIds.get(dominantSpecies);
+				String firstDominantGenome = dominantGenomes.get(0);
+				String[] taxonIds = completeGenomeId2TaxIds.get(firstDominantGenome);
 				for(String taxonId : taxonIds) {
 					outcome += "\t" + taxonId;
+				}
+				outcome += "\t" + firstDominantGenome;
+				for(int i = 1; i < dominantGenomes.size(); i++) {
+					outcome += ";" + dominantGenomes.get(i);
 				}
 			}
 			resultQueue.put(outcome);
