@@ -4,7 +4,7 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 
 *********************************************************************************************************  
 ## Install Java
-Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads. In Linux, use the following command to download the 'jdk-17_linux-x64_bin.tar.gz' file.  
+Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads. In the current directory, use the following Linux command to download the 'jdk-17_linux-x64_bin.tar.gz' file.  
 ````
 wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
 ````
@@ -34,7 +34,7 @@ unzip taxdmp.zip
 The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used and output files produced in the following 3 steps are included in this folder, so the commands can be directly run in a terminal window.  
 
 <b>Problem description:</b>  
-The 'reads.fasta' file contains ten short-read sequences to be classified. Five reads, whose headers start with SRR227300, were sequenced from the E. coli O104:H4 strain. The other five reads, whose headers start with SRR032501, from the Yersinia rohdei ATCC_43380 strain. The reference database (i.e. the 'RefSeq_genomes' folder) contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
+The 'reads.fasta' file contains 15 short-read sequences to be classified. The 5 reads whose headers start with SRR227300 were sequenced from the E. coli O104:H4 strain. The 5 reads whose headers start with SRR032501 were sequenced from the Yersinia rohdei ATCC_43380 strain. The 5 reads whose headers start with SRR095845 were sequenced from the Arabidopsis thaliana WalhaesB4 strain. The reference database (i.e. the 'RefSeq_genomes' folder) contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
 
 <b>Tool usage (3 steps):</b>  
 Change to the 'MNBC' folder using the following command.  
@@ -91,7 +91,7 @@ Run the following command to classify the reads against the database:
 ```-m```:	Input taxonomy file  
 ```-o```:	Output classification file  
 ```-t```:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.  
-```-u (optional)```: Filtering threshold on the ratio of common read-genome minimizers over total read minimizers (default 0.5). When set to 0, only reference genomes sharing minimizers with the read are considered, so that the read will be left unclassified if no genome has common minimizers with it.
+```-u (optional)```: Filtering threshold on the ratio of common read-genome minimizers over all read minimizers (default 0.35). When set to 0, only reference genomes sharing minimizers with the read are considered, so that the read will be left unclassified if no genome has common minimizers with it.
 ```-p (optional)```: Penalty for absent minimizers (default -2000)  
 ```-e (optional)```: Threshold on the difference between adjacent scores (default 1500)
 
@@ -110,18 +110,21 @@ The 1st column is the genome assembly ID, the 2nd to 8th columns are the taxon I
 ## Format of the classification file
 In the tab-delimited classification file 'result.txt' produced in Step 3, the 1st row contains column headers, and each subsequent row gives the classification for a read:  
 ````
-Read	Genome	Species	Genus	Family	Order	Class	Phylum	Superkingdom  
-SRR227300.1.1	GCF_022869985.1	562	561	543	91347	1236	1224	2  
-SRR227300.2.1	GCF_022869985.1	562	561	543	91347	1236	1224	2  
-SRR227300.4.1	GCF_022869985.1	562	561	543	91347	1236	1224	2  
-SRR227300.3.1	GCF_022869985.1	562	561	543	91347	1236	1224	2  
-SRR227300.5.1	GCF_022869985.1	562	561	543	91347	1236	1224	2  
-SRR032501.2.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
-SRR032501.1.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
-SRR032501.3.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
-SRR032501.4.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
-SRR032501.5.2	GCF_000834455.1	29485	629	1903411	91347	1236	1224	2  
+Read	Species	Genus	Family	Order	Class	Phylum	Domain	CandidateGenomes  
+SRR227300.1.1	562	561	543	91347	1236	1224	2	GCF_022869985.1  
+SRR227300.2.1	562	561	543	91347	1236	1224	2	GCF_022869985.1  
+SRR227300.26.1	562	561	543	91347	1236	1224	2	GCF_022869985.1  
+SRR227300.27.1	562	561	543	91347	1236	1224	2	GCF_022869985.1  
+SRR227300.28.1	562	561	543	91347	1236	1224	2	GCF_022869985.1  
+SRR032501.1.2	29485	629	1903411	91347	1236	1224	2	GCF_000834455.1  
+SRR032501.2.2	29485	629	1903411	91347	1236	1224	2	GCF_000834455.1  
+SRR032501.4.2	29485	629	1903411	91347	1236	1224	2	GCF_000834455.1  
+SRR032501.3.2	29485	629	1903411	91347	1236	1224	2	GCF_000834455.1  
+SRR095845.1744	unclassified  
+SRR095845.1744	unclassified  
+SRR032501.5.2	29485	629	1903411	91347	1236	1224	2	GCF_000834455.1  
+SRR095845.1747	unclassified  
+SRR095845.1745	unclassified  
+SRR095845.1748	unclassified  
 ````
-The 1st column is the read ID, the 2nd column is the genome ID assigned to the read, and the next 7 columns are the assigned taxon ID numbers from the species level to the domain level. It can be seen that all 10 reads were assigned the correct species-level taxon IDs (i.e. E. coli -- 562, Yersinia rohdei -- 29485).  
-
-Note that the value of the 'Genome' column can be 'null' -- this means MNBC did not classify to the genome level due to the presence of multiple candidates, but classified to the species level.
+The 1st column is the read ID, the 2nd to 8th columns are assigned taxon ID numbers from the species level to the domain level, and the last column is the IDs of all candidate reference genomes matching the read. It can be seen that all 15 reads were correctly classified (i.e. assigned the correct species-level taxon IDs, or labelled as unclassified).
