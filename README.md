@@ -127,4 +127,4 @@ SRR095845.1747	unclassified
 SRR095845.1745	unclassified  
 SRR095845.1748	unclassified  
 ````
-The 1st column is the read ID, the 2nd to 8th columns are assigned taxon ID numbers from the species level to the domain level, and the last column is the IDs of all candidate reference genomes matching the read. It can be seen that all 15 reads were correctly classified (i.e. assigned the correct species-level taxon IDs, or labelled as unclassified).
+The 1st column is the read ID, the 2nd to 8th columns are assigned taxon ID numbers from the species level to the domain level, and the last column is the IDs of all candidate reference genomes determining the predicted species. It can be seen that all 15 reads were correctly classified (i.e. assigned the correct species-level taxon IDs, or labelled as unclassified).
