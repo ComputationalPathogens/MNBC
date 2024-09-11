@@ -12,7 +12,7 @@ Decompress it with the following command.
 ````
 tar -xzvf jdk-17_linux-x64_bin.tar.gz
 ````
-Then a new folder 'jdk-17.0.10' appears.<br/>
+Then a new folder 'jdk-17.0.12' appears.<br/>
 
 (Alternatively, you can use the command "<b>mamba create -n java -c conda-forge openjdk</b>" to install Java JDK in mamba/conda, then run the command "<b>mamba activate java</b>" to activate the Java environment)  
 ## Install MNBC
@@ -45,7 +45,7 @@ cd ..
 <b>(Optional) add Java to Linux PATH variable:</b>  
 Replace <parent_directory> in the following line with the actual path, then append this line to the end of the '.bashrc' file in your home directory.  
 ````
-export PATH=<parent_directory>/jdk-17.0.10/bin:${PATH}
+export PATH=<parent_directory>/jdk-17.0.12/bin:${PATH}
 ````
 Either open a new terminal window, or run the following command in the current window.
 ````
@@ -58,7 +58,7 @@ Then the commands in the following 3 steps can be simplified to "<b>java -cp MNB
 <b>Step 1</b>:  
 Run the following command to generate the taxonomy file of the reference database:  
 ````
-../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt
+../jdk-17.0.12/bin/java -cp MNBC.jar -Xmx1G MNBC taxonomy -i example/RefSeq_genomes/ -a example/assembly_summary_refseq.txt -n example/nodes.dmp -o example/taxonomy.txt
 ````
 (The following help menu displays by using ```-h```)  
 ```-a```:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt downloaded from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))  
@@ -69,7 +69,7 @@ Run the following command to generate the taxonomy file of the reference databas
 <b>Step 2</b>:  
 Run the following command to build the database:  
 ````
-../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/
+../jdk-17.0.12/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/
 ````
 (The following help menu displays by using ```-h```)  
 ```-k```:	K-mer length  
@@ -82,7 +82,7 @@ Run the following command to build the database:
 <b>Step 3</b>:  
 Run the following command to classify the reads against the database:  
 ````
-../jdk-17.0.10/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta
+../jdk-17.0.12/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta
 ````
 (The following help menu displays by using ```-h```)  
 ```-k```: K-mer length  
