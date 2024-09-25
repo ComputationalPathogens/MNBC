@@ -328,7 +328,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 						}
 					}
 					
-					if(counter >= (numberOfReadMinimizers * unclassifiedThreshold)) { //At lease (1/unclassifiedThreshold) of read minimizers are in genome, genome is taken into account, make classification
+					if(counter >= (numberOfReadMinimizers * unclassifiedThreshold)) { //At lease unclassifiedThreshold ratio of read minimizers are in genome, genome is taken into account, make classification
 						if(topScores.containsKey(score)) {
 							topScores.get(score).add(i);
 						} else {
