@@ -4,13 +4,13 @@ The MNBC (multithreaded Minimizer-based Naive Bayes Classifier) read classifier
 
 *********************************************************************************************************  
 ## Install Java
-Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads. For example, use the following Linux command to download the 'jdk-17_linux-x64_bin.tar.gz' file.  
+Please download and install Java JDK (version >= 17.0.4) from https://www.oracle.com/ca-en/java/technologies/downloads. For example, use the following Linux command to download:  
 ````
 wget https://download.oracle.com/java/17/archive/jdk-17.0.12_linux-x64_bin.tar.gz
 ````
 Decompress it with the following command.  
 ````
-tar -xzvf jdk-17_linux-x64_bin.tar.gz
+tar -xzvf jdk-17.0.12_linux-x64_bin.tar.gz
 ````
 Then a new folder 'jdk-17.0.12' appears.<br/>
 
