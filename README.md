@@ -8,7 +8,7 @@ Please download and install Java JDK (version >= 17.0.4) from https://www.oracle
 ````
 wget https://download.oracle.com/java/17/archive/jdk-17.0.12_linux-x64_bin.tar.gz
 ````
-Decompress it with the following command.  
+Decompress the file with the following command.  
 ````
 tar -xzvf jdk-17.0.12_linux-x64_bin.tar.gz
 ````
