@@ -139,7 +139,7 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 	}
 	
 	private static void printHelpInfo() {
-		System.out.println("This MNBC_build tool (v1.0) builds a reference database from a set of sequence files.");
+		System.out.println("This MNBC_build tool (v1.1) builds a reference database from a set of sequence files.");
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-k:	K-mer length");
 		System.out.println("-c:	Number of threads");		

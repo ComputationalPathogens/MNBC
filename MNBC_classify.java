@@ -993,7 +993,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 	}
 	
 	private static void printHelpInfo() {
-		System.out.println("This MNBC_classify tool (v1.0) classifies reads against a reference database.");
+		System.out.println("This MNBC_classify tool (v1.1) classifies reads against a reference database.");
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-k:	K-mer length");
 		System.out.println("-c:	Number of threads");		

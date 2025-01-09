@@ -82,8 +82,12 @@ public class MNBC_taxonomy {
 			
 			ranks[0] = taxidAndName[0];
 			String supposedSpeciesLevel = taxid2TaxLevel.get(ranks[0]);
+			if(supposedSpeciesLevel == null) {
+				System.out.println("ERROR: " + ranks[0] + " is not in nodes.dmp! Exiting");
+				System.exit(1);
+			}
 			if(!supposedSpeciesLevel.equals("species")) {
-				System.out.println("ERROR: " + ranks[1] + " is supposed to be a species according to the assembly summary file, but nodes.dmp reports " + supposedSpeciesLevel + "! Exiting");
+				System.out.println("ERROR: " + ranks[0] + " is supposed to be a species according to the assembly summary file, but nodes.dmp reports " + supposedSpeciesLevel + "! Exiting");
 				System.exit(1);
 			}				
 			fillRanksArray(ranks[0], ranks, taxid2TaxLevel, taxid2ParentTaxid);			
@@ -202,7 +206,7 @@ public class MNBC_taxonomy {
 	}
 	
 	private static void printHelpInfo() {
-		System.out.println("This MNBC_taxonomy tool (v1.0) generates the taxonomy file for a reference database.");
+		System.out.println("This MNBC_taxonomy tool (v1.1) generates the taxonomy file for a reference database.");
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))");
 		System.out.println("-n:	Taxonomy nodes.dmp file downoaded from NCBI (e.g. taxdmp.zip from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)");		
