@@ -76,19 +76,19 @@ public class MNBC_taxonomy {
 			//System.out.println("assemblyID " + assemblyID);
 			String[] taxidAndName = refseqAssemblyID2Taxid.get(assemblyID);
 			if(taxidAndName == null) {
-				System.out.println("ERROR: couldn't find the assembly ID " + assemblyID + " in the assembly summary file!");
+				System.out.println("ERROR: couldn't find the assembly ID " + assemblyID + " in the assembly summary file! Please check");
 				continue;
 			}			
 			
 			ranks[0] = taxidAndName[0];
 			String supposedSpeciesLevel = taxid2TaxLevel.get(ranks[0]);
 			if(supposedSpeciesLevel == null) {
-				System.out.println("ERROR: taxon " + ranks[0] + " of " + assemblyID + " is not in nodes.dmp! Exiting");
-				System.exit(1);
+				System.out.println("ERROR: taxon " + ranks[0] + " of " + assemblyID + " is not in nodes.dmp! Please check");
+				continue;
 			}
 			if(!supposedSpeciesLevel.equals("species")) {
-				System.out.println("ERROR: taxon " + ranks[0] + " of " + assemblyID + " is supposed to be a species according to the assembly summary file, but nodes.dmp reports " + supposedSpeciesLevel + "! Exiting");
-				System.exit(1);
+				System.out.println("ERROR: taxon " + ranks[0] + " of " + assemblyID + " is supposed to be a species according to the assembly summary file, but nodes.dmp reports " + supposedSpeciesLevel + "! Please check");
+				continue;
 			}				
 			fillRanksArray(ranks[0], ranks, taxid2TaxLevel, taxid2ParentTaxid);			
 			
