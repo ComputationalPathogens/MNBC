@@ -67,7 +67,7 @@ Run the following command to generate the taxonomy file of the reference databas
 ```-o```:	Output taxonomy file for the database
 
 <b>Tip</b>:
-Sometimes a genome assembly ID (e.g. GCF_000834455.1) does not exist in the assembly summary file, or its taxon ID number does not exist in the nodes.dmp file. If this happens MNBC will output error information for manual check.
+Sometimes a genome assembly ID (e.g. GCF_021047685.1) does not exist in the assembly summary file, or its taxon ID number does not exist in the nodes.dmp file. If this happens MNBC will output error information for manual check.
 
 <b>Step 2</b>:  
 Run the following command to build the database:  
