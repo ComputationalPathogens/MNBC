@@ -66,6 +66,9 @@ Run the following command to generate the taxonomy file of the reference databas
 ```-i```:	Input directory containing the (gzipped) files of reference sequences in the database (e.g. GCF_000834455.1_ASM83445v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
 ```-o```:	Output taxonomy file for the database
 
+<b>Tip</b>:
+Sometimes a genome assembly ID (e.g. GCF_000834455.1) does not exist in the assembly summary file, or its taxon ID number does not exist in the nodes.dmp file. If this happens MNBC will output error information for manual check.
+
 <b>Step 2</b>:  
 Run the following command to build the database:  
 ````
@@ -95,7 +98,7 @@ Run the following command to classify the reads against the database:
 ```-p (optional)```: Penalty for absent minimizers (default -2000)  
 ```-e (optional)```: Threshold on the difference between adjacent scores (default 1500)
 
-<b>Tips</b>:
+<b>Tip</b>:
 When using a large reference database (e.g. one containing all prokaryotic and viral complete genomes with OK taxonomy check status from RefSeq), increase the memory amount that MNBC can use in Steps 2 and 3 by adjusting the '-Xmx' parameter (e.g. -Xmx200G), and also increase the number of CPU cores by adjusting the '-c' parameter (e.g. -c 100) to accelerate.
 
 ## Format of the taxonomy file
