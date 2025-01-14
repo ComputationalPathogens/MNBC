@@ -67,7 +67,7 @@ Run the following command to generate the taxonomy file of the reference databas
 ```-o```:	Output taxonomy file for the database
 
 <b>Tip</b>:
-Sometimes a genome assembly ID (e.g. GCF_021047685.1) does not exist in the assembly summary file, or its taxon ID number does not exist in the nodes.dmp file. If this happens MNBC will output error information for manual check.
+Sometimes a genome assembly accession (e.g. GCF_021047685.1) does not exist in the assembly summary file, or its taxon number does not exist in the nodes.dmp file. If this happens MNBC will output error information for manual check.
 
 <b>Step 2</b>:  
 Run the following command to build the database:  
@@ -104,30 +104,30 @@ When using a large reference database (e.g. one containing all prokaryotic and v
 ## Format of the taxonomy file
 In the tab-delimited taxonomy file 'taxonomy.txt' produced in Step 1, the 1st row contains column headers, and each subsequent row gives the taxonomy information for a reference genome in the database:
 ````
-Assembly ID	taxid.species	taxid.genus	taxid.family	taxid.order	taxid.class	taxid.phylum	taxid.superkingdom	Organism name
-GCF_000834455.1	29485	629	1903411	91347	1236	1224	2	Yersinia rohdei strain=YRA
-GCF_022869985.1	562	561	543	91347	1236	1224	2	Escherichia coli O104:H4 strain=PartB-EcoliO104H4-RM8376
+Accession	Species	Genus	Family	Order	Class	Phylum	Kingdom	Domain	Organism  
+GCF_022869985.1	562	561	543	91347	1236	1224	3379134	2	Escherichia coli O104:H4 strain=PartB-EcoliO104H4-RM8376  
+GCF_000834455.1	29485	629	1903411	91347	1236	1224	3379134	2	Yersinia rohdei strain=YRA  
 ````
-The 1st column is the genome assembly ID, the 2nd to 8th columns are the taxon ID numbers of the genome from the species level to the domain level, and the 9th column is the string name (species and strain) of the genome.
+The 1st column is the genome assembly accession, the 2nd to 9th columns are the taxon numbers of the genome from the species level to the domain level, and the 9th column is the string name (species and strain) of the genome.
 
 ## Format of the classification file
 In the tab-delimited classification file 'result.txt' produced in Step 3, the 1st row contains column headers, and each subsequent row gives the classification for a read:  
 ````
-Read	Species	Genus	Family	Order	Class	Phylum	Domain	CandidateGenomes  
-SRR227300.1.1	562	561	543	91347	1236	1224	2	GCF_022869985.1  
-SRR227300.2.1	562	561	543	91347	1236	1224	2	GCF_022869985.1  
-SRR227300.26.1	562	561	543	91347	1236	1224	2	GCF_022869985.1  
-SRR227300.27.1	562	561	543	91347	1236	1224	2	GCF_022869985.1  
-SRR227300.28.1	562	561	543	91347	1236	1224	2	GCF_022869985.1  
-SRR032501.1.2	29485	629	1903411	91347	1236	1224	2	GCF_000834455.1  
-SRR032501.2.2	29485	629	1903411	91347	1236	1224	2	GCF_000834455.1  
-SRR032501.4.2	29485	629	1903411	91347	1236	1224	2	GCF_000834455.1  
-SRR032501.3.2	29485	629	1903411	91347	1236	1224	2	GCF_000834455.1  
-SRR095845.1744	unclassified  
+Read	Species	Genus	Family	Order	Class	Phylum	Kingdom	Domain	Candidates  
+SRR227300.1.1	562	561	543	91347	1236	1224	3379134	2	GCF_022869985.1  
+SRR227300.2.1	562	561	543	91347	1236	1224	3379134	2	GCF_022869985.1  
+SRR227300.26.1	562	561	543	91347	1236	1224	3379134	2	GCF_022869985.1  
+SRR227300.27.1	562	561	543	91347	1236	1224	3379134	2	GCF_022869985.1  
+SRR227300.28.1	562	561	543	91347	1236	1224	3379134	2	GCF_022869985.1  
+SRR032501.1.2	29485	629	1903411	91347	1236	1224	3379134	2	GCF_000834455.1  
+SRR032501.2.2	29485	629	1903411	91347	1236	1224	3379134	2	GCF_000834455.1  
+SRR032501.3.2	29485	629	1903411	91347	1236	1224	3379134	2	GCF_000834455.1  
+SRR032501.4.2	29485	629	1903411	91347	1236	1224	3379134	2	GCF_000834455.1  
+SRR032501.5.2	29485	629	1903411	91347	1236	1224	3379134	2	GCF_000834455.1  
 SRR095845.1746	unclassified  
-SRR032501.5.2	29485	629	1903411	91347	1236	1224	2	GCF_000834455.1  
-SRR095845.1747	unclassified  
 SRR095845.1745	unclassified  
+SRR095845.1747	unclassified  
 SRR095845.1748	unclassified  
+SRR095845.1744	unclassified  
 ````
-The 1st column is the read ID, the 2nd to 8th columns are assigned taxon ID numbers from the species level to the domain level, and the last column is the IDs of all candidate reference genomes determining the predicted species. It can be seen that all 15 reads were correctly classified (i.e. assigned the correct species-level taxon IDs, or labelled as unclassified).
+The 1st column is the read ID, the 2nd to 9th columns are assigned taxon numbers from the species level to the domain level, and the last column is the accessions of all candidate reference genomes determining the predicted species. It can be seen that all 15 reads were correctly classified (i.e. assigned the correct species-level taxon numbers, or labelled as unclassified).

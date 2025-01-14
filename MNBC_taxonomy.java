@@ -57,7 +57,7 @@ public class MNBC_taxonomy {
 		
 		try {
 			PrintWriter writer = new PrintWriter(outputPath);
-			writer.print("RefSeq assembly ID\ttaxid.species\ttaxid.genus\ttaxid.family\ttaxid.order\ttaxid.class\ttaxid.phylum\ttaxid.superkingdom\tOrganism name\n");
+			writer.print("Accession\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tKingdom\tDomain\tOrganism\n");
 			generateGenomeTaxonomyTableRows(writer, refseqAssemblyIDs, refseqAssemblyID2Taxid, taxid2TaxLevel, taxid2ParentTaxid);
 			writer.close();
 		} catch(Exception e) {
@@ -72,11 +72,11 @@ public class MNBC_taxonomy {
 	private static void generateGenomeTaxonomyTableRows(PrintWriter writer, ArrayList<String> refseqAssemblyIDs, HashMap<String, String[]> refseqAssemblyID2Taxid, HashMap<String, String> taxid2TaxLevel, HashMap<String, String> taxid2ParentTaxid) {
 		for(String assemblyID : refseqAssemblyIDs) {
 			String row = assemblyID;
-			String[] ranks = new String[7];
+			String[] ranks = new String[8];
 			//System.out.println("assemblyID " + assemblyID);
 			String[] taxidAndName = refseqAssemblyID2Taxid.get(assemblyID);
 			if(taxidAndName == null) {
-				System.out.println("ERROR: couldn't find the assembly ID " + assemblyID + " in the assembly summary file! Please check");
+				System.out.println("ERROR: couldn't find the accession number " + assemblyID + " in the assembly summary file! Please check");
 				continue;
 			}			
 			
@@ -106,7 +106,7 @@ public class MNBC_taxonomy {
 		String currentTaxid = initial;
 		while(!currentTaxid.isEmpty()) {
 			if(currentTaxid.equals("1")) {
-				System.out.println("ERROR: nodes.dmp doesn't include all 7 primary-level taxon ids for " + initial + "! Exiting");
+				System.out.println("ERROR: nodes.dmp doesn't include all 8 primary-level taxons for the species" + initial + "! Exiting");
 				System.exit(1);
 			}
 			String parentTaxid = taxid2ParentTaxid.get(currentTaxid);
@@ -136,8 +136,12 @@ public class MNBC_taxonomy {
 				ranks[5] = parentTaxid;
 				currentTaxid = parentTaxid;
 				continue;
-			} else if(level.equals("superkingdom")) {
+			} else if(level.equals("kingdom")) {
 				ranks[6] = parentTaxid;
+				currentTaxid = parentTaxid;
+				continue;
+			} else if(level.equals("superkingdom")) {
+				ranks[7] = parentTaxid;
 				currentTaxid = "";
 			} else {
 				currentTaxid = parentTaxid;
@@ -206,7 +210,7 @@ public class MNBC_taxonomy {
 	}
 	
 	private static void printHelpInfo() {
-		System.out.println("This MNBC_taxonomy tool (v1.1) generates the taxonomy file for a reference database.");
+		System.out.println("This MNBC_taxonomy tool (v1.2) generates the taxonomy file for a reference database.");
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-a:	Assembly summary file downloaded from NCBI (e.g. assembly_summary_refseq.txt from https://ftp.ncbi.nlm.nih.gov/genomes/refseq/))");
 		System.out.println("-n:	Taxonomy nodes.dmp file downoaded from NCBI (e.g. taxdmp.zip from https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/)");		

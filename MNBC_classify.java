@@ -151,7 +151,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		long endTime = System.nanoTime();
 		System.out.println("Read DB in " + + ((endTime - startTime) / 1000000000) + " seconds");
 		
-		completeGenomeId2TaxIds = readCompleteMeta(metaFilePath);
+		completeGenomeId2TaxIds = readCompleteMeta();
 		
 		new Thread(new Producer()).start();
 		
@@ -165,7 +165,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			PrintWriter writer = null;
 			if(finishedReadIds == null) {
 				writer = new PrintWriter(new FileWriter(outputFilePath), true);
-				writer.println("Read\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tDomain\tCandidateGenomes");
+				writer.println("Read\tSpecies\tGenus\tFamily\tOrder\tClass\tPhylum\tKingdom\tDomain\tCandidates");
 			} else {
 				writer = new PrintWriter(new FileWriter(outputFilePath, true), true);
 			}			
@@ -208,15 +208,15 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		}
 	}
 	
-	private static HashMap<String, String[]> readCompleteMeta(String completeMetaFilePath) {
+	private static HashMap<String, String[]> readCompleteMeta() {
 		HashMap<String, String[]> completeGenomeId2TaxIds = new HashMap<String, String[]>();
 		
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(completeMetaFilePath));
+			BufferedReader reader = new BufferedReader(new FileReader(metaFilePath));
 			String line = reader.readLine();
 			while((line = reader.readLine()) != null) {
 				String[] fields = line.split("\t");
-				completeGenomeId2TaxIds.put(fields[0], new String[] {fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7]});
+				completeGenomeId2TaxIds.put(fields[0], new String[] {fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[8]});
 			}
 			reader.close();
 		} catch(Exception e) {
@@ -993,7 +993,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 	}
 	
 	private static void printHelpInfo() {
-		System.out.println("This MNBC_classify tool (v1.1) classifies reads against a reference database.");
+		System.out.println("This MNBC_classify tool (v1.2) classifies reads against a reference database.");
 		System.out.println("-h:	Show this help menu");
 		System.out.println("-k:	K-mer length");
 		System.out.println("-c:	Number of threads");		
