@@ -196,7 +196,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 			String line = reader.readLine();
 			while((line = reader.readLine()) != null) {
 				String[] fields = line.split("\t");
-				if(fields.length == 9 || line.endsWith("unclassified")) {
+				if(fields.length == 10 || line.endsWith("unclassified")) {
 					finishedReadIds.add(fields[0]);
 				}
 			}
