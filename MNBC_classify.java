@@ -34,7 +34,7 @@ import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
 public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
-	private static int k;
+	private static int k = 15;
 	private static int numberOfThreads;
 	private static float kmerPenalty = -2000.0F;
 	private static float delta = 1500.0F;
@@ -103,7 +103,7 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 		}
 		
 		if((k <= 0) || (numberOfThreads == 0) || (dbDirPath == null) || (metaFilePath == null) || (outputFilePath == null) || (startPath == null)) {
-			System.out.println("Error: not all required parameters are set -- Run 'MNBC classify -h' for help");
+			System.out.println("Error: not all required parameters are correctly set -- Run 'MNBC classify -h' for help");
 			System.exit(0);
 		}
 		
@@ -995,12 +995,12 @@ public class MNBC_classify { //Previously called MNBC_classify2_onlydelta1000
 	private static void printHelpInfo() {
 		System.out.println("This MNBC_classify tool (v1.2) classifies reads against a reference database.");
 		System.out.println("-h:	Show this help menu");
-		System.out.println("-k:	K-mer length");
 		System.out.println("-c:	Number of threads");		
 		System.out.println("-d:	Input database directory");
 		System.out.println("-m:	Input taxonomy file");
 		System.out.println("-o:	Output classification file");		
 		System.out.println("-t:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.");
+		System.out.println("-k (optional):	K-mer length (an integer between 1 and 15 inclusive) (default: 15)");
 		System.out.println("-u (optional): Filtering threshold on the ratio of common read-genome minimizers over all read minimizers (default 0.35). Higher values lead to less reads classified, though with higher confidence. Lower values lead to more reads classified (i.e. leave less reads unclassified). When set to 0, the read will be left unclassified only if all reference genomes share no minimizers with it.");
 		System.out.println("-p (optional): Penalty for absent minimizers (default -2000)");
 		System.out.println("-e (optional): Threshold on the difference between adjacent scores (default 1500)");

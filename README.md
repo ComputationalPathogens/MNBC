@@ -72,28 +72,28 @@ Sometimes a genome assembly accession (e.g. GCF_021047685.1) does not exist in t
 <b>Step 2</b>:  
 Run the following command to build the database:  
 ````
-../jdk-17.0.12/bin/java -cp MNBC.jar -Xmx1G MNBC build -k 15 -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/
+../jdk-17.0.12/bin/java -cp MNBC.jar -Xmx1G MNBC build -c 2 -f 300000 -i example/RefSeq_genomes/ -o example/db/
 ````
 (The following help menu displays by using ```-h```)  
-```-k```:	K-mer length  
 ```-c```:	Number of threads  
 ```-i```:	Input directory containing the (gzipped) files of reference sequences (e.g. GCF_000834455.1_ASM83445v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)  
 ```-o```: Existing output database directory (please first make this directory if it doesn't already exist)  
+```-k (optional)```: K-mer length (an integer between 1 and 15 inclusive) (default: 15)  
 ```-f (optional)```: Filtering threshold on the sequence length (an integer >= 0). Chromosomes with lengths below this threshold are ignored as well as all plasmids. The default value is 0 (i.e. all chromosomes are retained).  
 ```-b (optional)```: Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.
 
 <b>Step 3</b>:  
 Run the following command to classify the reads against the database:  
 ````
-../jdk-17.0.12/bin/java -cp MNBC.jar -Xmx1G MNBC classify -k 15 -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta
+../jdk-17.0.12/bin/java -cp MNBC.jar -Xmx1G MNBC classify -c 2 -d example/db/ -m example/taxonomy.txt -o example/result.txt -t 1 example/reads.fasta
 ````
 (The following help menu displays by using ```-h```)  
-```-k```: K-mer length  
 ```-c```: Number of threads  
 ```-d```: Input database directory  
 ```-m```:	Input taxonomy file  
 ```-o```:	Output classification file  
 ```-t```:	Type of reads (paired-end: 2, single-end: 1). Paired-end reads have two following (gzipped) .fasta/.fastq files. Single-end reads have one following (gzipped) .fasta/.fastq file.  
+```-k (optional)```: K-mer length (an integer between 1 and 15 inclusive) (default: 15)  
 ```-u (optional)```: Filtering threshold on the ratio of common read-genome minimizers over all read minimizers (default 0.35). Higher values lead to less reads classified, though with higher confidence. Lower values lead to more reads classified (i.e. leave less reads unclassified). When set to 0, the read will be left unclassified only if all reference genomes share no minimizers with it.  
 ```-p (optional)```: Penalty for absent minimizers (default -2000)  
 ```-e (optional)```: Threshold on the difference between adjacent scores (default 1500)

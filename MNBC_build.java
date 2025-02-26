@@ -31,7 +31,7 @@ import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 
 public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use canonical kmers; And only use slurm-jobid.out as the progress file
 						//Only use minimizer seeds (w=k, window size=w+k-1), base/kmer ordering can change (here use default alphabetical ACGT order)
-	private static int k;
+	private static int k = 15;
 	private static int numberOfThreads;
 	private static int lengthThreshold = 0;
 	private static String referenceGenomeDirPath;	
@@ -72,8 +72,8 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 			}
 		}
 		
-		if((k == 0) || (numberOfThreads == 0) || (referenceGenomeDirPath == null) || (outputDirPath == null)) {
-			System.out.println("Error: not all required parameters are set -- Run 'MNBC build -h' for help");
+		if((k <= 0) || (numberOfThreads == 0) || (referenceGenomeDirPath == null) || (outputDirPath == null)) {
+			System.out.println("Error: not all required parameters are correctly set -- Run 'MNBC build -h' for help");
 			System.exit(0);
 		}
 		
@@ -140,11 +140,11 @@ public class MNBC_build { //Based on NaiveBayesClassifierCount_V3, only use cano
 	
 	private static void printHelpInfo() {
 		System.out.println("This MNBC_build tool (v1.2) builds a reference database from a set of sequence files.");
-		System.out.println("-h:	Show this help menu");
-		System.out.println("-k:	K-mer length");
+		System.out.println("-h:	Show this help menu");		
 		System.out.println("-c:	Number of threads");		
 		System.out.println("-i:	Input directory containing the (gzipped) files of reference sequences (e.g. GCF_000009045.1_ASM904v1_genomic.fna.gz is a reference genome sequence file downloaded from RefSeq)");
 		System.out.println("-o:	Exiting output database directory");
+		System.out.println("-k (optional):	K-mer length (an integer between 1 and 15 inclusive) (default: 15)");
 		System.out.println("-f (optional): Filtering threshold on the sequence length (an integer >= 0). Chromosomes with lengths below this threshold are ignored as well as all plasmids. The default value is 0 (i.e. all chromosomes are retained).");
 		System.out.println("-b (optional): Log file of the previous prematurely killed run (i.e. .out file in Slurm). This allows breakpoint resumption after the previous run exits abnormally.");
 	}
