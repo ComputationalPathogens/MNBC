@@ -34,7 +34,7 @@ unzip taxdmp.zip
 The 'example' folder includes a small demo, which is described below to demonstrate how to use the tool. All input files used and output files produced in the following 3 steps are included in this folder, so the commands can be directly run in a terminal window.  
 
 ### Problem description:  
-The 'reads.fasta' file contains 15 short-read sequences to be classified. The 5 reads whose headers start with SRR227300 were sequenced from the E. coli O104:H4 strain. The 5 reads whose headers start with SRR032501 were sequenced from the Yersinia rohdei ATCC_43380 strain. The 5 reads whose headers start with SRR095845 were sequenced from the Arabidopsis thaliana WalhaesB4 strain. The reference database (i.e. the 'RefSeq_genomes' folder) contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
+The 'reads.fasta' file contains 15 short-read sequences to be classified. The 5 reads whose headers start with SRR227300 were sequenced from the E. coli O104:H4 strain. The 5 reads whose headers start with SRR032501 were sequenced from the Yersinia rohdei ATCC_43380 strain. The 5 reads whose headers start with SRR095845 were sequenced from the Arabidopsis thaliana WalhaesB4 strain. The reference database contains two complete genomes obtained from RefSeq: GCF_022869985.1 belongs to the E. coli O104:H4 strain, and GCF_000834455.1 belongs to the Yersinia rohdei YRA strain.  
 
 ### Tool usage (3 steps):  
 Change to the 'MNBC' folder using the following command.  
